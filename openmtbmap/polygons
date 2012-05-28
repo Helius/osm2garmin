@@ -1,0 +1,385 @@
+####start of GPL License section (note license for other parts):
+
+
+mkgmap:country!=* & mkgmap:admin_level2=* { set mkgmap:country='${mkgmap:admin_level2}' }
+mkgmap:country!=* & addr:country=* { set mkgmap:country='${addr:country}' }
+mkgmap:country!=* & is_in:country=* { set mkgmap:country='${is_in:country}' }
+
+# country specific rules first
+
+# Netherlands = NLD
+mkgmap:country=NLD & mkgmap:region!=* & mkgmap:admin_level4=* { set mkgmap:region='${mkgmap:admin_level4}' }
+mkgmap:country=NLD & mkgmap:city!=* & mkgmap:admin_level10=* { set mkgmap:city='${mkgmap:admin_level10}' } 
+mkgmap:country=NLD & mkgmap:city!=* & mkgmap:admin_level8=* { set mkgmap:city='${mkgmap:admin_level8}' } 
+
+# Germany = DEU cities
+mkgmap:country=DEU & ( mkgmap:admin_level4=Hamburg | mkgmap:admin_level4=Berlin | mkgmap:admin_level4=Bremen ) {set mkgmap:city='${mkgmap:admin_level4|subst:Gemeinde |subst:Stadt }' }
+mkgmap:country=DEU & mkgmap:city!=* & mkgmap:admin_level8=* { set mkgmap:city='${mkgmap:admin_level8|subst:Gemeinde |subst:Stadt }' }
+mkgmap:country=DEU & mkgmap:city!=* & mkgmap:admin_level7=* { set mkgmap:city='${mkgmap:admin_level7}' } 
+mkgmap:country=DEU & mkgmap:city!=* & mkgmap:admin_level6=* { set mkgmap:city='${mkgmap:admin_level6}' } 
+mkgmap:country=DEU & mkgmap:city!=* & mkgmap:admin_level9=* { set mkgmap:city='${mkgmap:admin_level9}' } 
+mkgmap:country=DEU & mkgmap:city!=* & mkgmap:admin_level10=* { set mkgmap:city='${mkgmap:admin_level10}' } 
+
+# Austria = AUT  --- Vienna problems
+(mkgmap:country=DE | mkgmap:country=AUT | mkgmap:country=AT | mkgmap:country=CH | mkgmap:country=SUI | mkgmap:country=CHE ) & mkgmap:city!=* & mkgmap:admin_level8=* { set mkgmap:city='${mkgmap:admin_level8|subst:Gemeinde |subst:Stadt |subst:Bezirk}' }
+mkgmap:country=BEL & mkgmap:city!=* & mkgmap:admin_level8=* { set mkgmap:city='${mkgmap:admin_level8}' }
+mkgmap:country=CZE & mkgmap:city!=* & mkgmap:admin_level8=* { set mkgmap:city='${mkgmap:admin_level8}' }
+mkgmap:country=CZE & mkgmap:city!=* & mkgmap:admin_level7=* { set mkgmap:city='${mkgmap:admin_level7}' }
+mkgmap:country=DNK & mkgmap:city!=* & mkgmap:admin_level8=* { set mkgmap:city='${mkgmap:admin_level8}' }
+mkgmap:country=DNK & mkgmap:city!=* & mkgmap:admin_level7=* { set mkgmap:city='${mkgmap:admin_level7}' }
+mkgmap:country=FIN & mkgmap:city!=* & mkgmap:admin_level9=* { set mkgmap:city='${mkgmap:admin_level9}' }
+mkgmap:country=FIN & mkgmap:city!=* & mkgmap:admin_level8=* { set mkgmap:city='${mkgmap:admin_level8}' }
+mkgmap:country=FRA & mkgmap:city!=* & mkgmap:admin_level9=* { set mkgmap:city='${mkgmap:admin_level9}' }
+mkgmap:country=FRA & mkgmap:city!=* & mkgmap:admin_level8=* { set mkgmap:city='${mkgmap:admin_level8}' }
+mkgmap:country=ISL & mkgmap:city!=* & mkgmap:admin_level8=* { set mkgmap:city='${mkgmap:admin_level8}' }
+mkgmap:country=ITA & mkgmap:city!=* & mkgmap:admin_level8=* { set mkgmap:city='${mkgmap:admin_level8}' }
+mkgmap:country=LUX & mkgmap:city!=* & mkgmap:admin_level8=* { set mkgmap:city='${mkgmap:admin_level8}' }
+mkgmap:country=NOR & mkgmap:city!=* & mkgmap:admin_level9=* { set mkgmap:city='${mkgmap:admin_level9}' }
+mkgmap:country=POL & mkgmap:city!=* & mkgmap:admin_level10=* { set mkgmap:city='${mkgmap:admin_level10}' }
+mkgmap:country=POL & mkgmap:city!=* & mkgmap:admin_level8=* { set mkgmap:city='${mkgmap:admin_level8}' }
+mkgmap:country=PRT & mkgmap:city!=* & mkgmap:admin_level9=* { set mkgmap:city='${mkgmap:admin_level9}' }
+mkgmap:country=PRT & mkgmap:city!=* & mkgmap:admin_level8=* { set mkgmap:city='${mkgmap:admin_level8}' }
+mkgmap:country=SVN & mkgmap:city!=* & mkgmap:admin_level10=* { set mkgmap:city='${mkgmap:admin_level10}' }
+mkgmap:country=ESP & mkgmap:city!=* & mkgmap:admin_level8=* { set mkgmap:city='${mkgmap:admin_level8}' }
+mkgmap:country=SWE & mkgmap:city!=* & mkgmap:admin_level9=* { set mkgmap:city='${mkgmap:admin_level9}' }
+mkgmap:country=SWE & mkgmap:city!=* & mkgmap:admin_level7=* { set mkgmap:city='${mkgmap:admin_level7}' }
+mkgmap:country=CHE & mkgmap:city!=* & mkgmap:admin_level8=* { set mkgmap:city='${mkgmap:admin_level8}' }
+ 
+( mkgmap:country=AUT | mkgmap:country=AT ) & mkgmap:admin_level4=* & ( name=wien | name=Wien ) { set mkgmap:city='${mkgmap:admin_level4|subst:Gemeinde |subst:Stadt |subst:Bezirk}' }
+( mkgmap:country=AUT | mkgmap:country=AT ) & ( mkgmap:region=Wien | mkgmap:region=wien ) { set mkgmap:city='${mkgmap:admin_level4|subst:Gemeinde |subst:Stadt |subst:Bezirk}' }
+ 
+# common rules for all the rest of countries
+mkgmap:region!=* & mkgmap:admin_level6=* { set mkgmap:region='${mkgmap:admin_level6}' } 
+mkgmap:region!=* & mkgmap:admin_level5=* { set mkgmap:region='${mkgmap:admin_level5}' } 
+mkgmap:region!=* & mkgmap:admin_level4=* { set mkgmap:region='${mkgmap:admin_level4}' } 
+mkgmap:region!=* & mkgmap:admin_level3=* { set mkgmap:region='${mkgmap:admin_level3}' } 
+mkgmap:region!=* & is_in:county=* { set mkgmap:region='${is_in:county}' } 
+
+
+mkgmap:city!=* & mkgmap:admin_level8=* { set mkgmap:city='${mkgmap:admin_level8}' } 
+mkgmap:city!=* & mkgmap:admin_level7=* { set mkgmap:city='${mkgmap:admin_level7}' } 
+mkgmap:city!=* & mkgmap:admin_level9=* { set mkgmap:city='${mkgmap:admin_level9}' } 
+mkgmap:city!=* & mkgmap:admin_level10=* { set mkgmap:city='${mkgmap:admin_level10}' } 
+mkgmap:city!=* & is_in:city=* { set mkgmap:city='${is_in:city}' }
+mkgmap:city!=* & addr:city=* { set mkgmap:city='${addr:city}' }
+
+
+mkgmap:postal_code!=* & mkgmap:postcode=* { set mkgmap:postal_code='${mkgmap:postcode}' } 
+mkgmap:postal_code!=* & addr:postcode=* { set mkgmap:postal_code='${addr:postcode}' } 
+
+mkgmap:street!=* & addr:street=* { set mkgmap:street='${addr:street}' }
+mkgmap:street!=* & addr:housename=* { set mkgmap:street='${addr:housename}' }
+
+mkgmap:housenumber!=* & addr:housenumber=* { set mkgmap:housenumber='${addr:housenumber}' }
+
+mkgmap:phone!=* & phone=* { set mkgmap:phone='${phone}' }
+mkgmap:phone!=* & contact:phone=* { add mkgmap:phone='${contact:phone}' }
+mkgmap:phone!=* & contact:website=* { add mkgmap:phone='${contact:website}' }
+mkgmap:phone!=* & url=* { add mkgmap:phone='${url}' }
+mkgmap:phone!=* & wikipedia=* { add mkgmap:phone='${wikipedia}' }
+mkgmap:phone!=* & contact:email=* { add mkgmap:phone='${contact:email}' }
+
+mkgmap:is_in!=* & is_in=* {set mkgmap:is_in='${is_in}' } 
+
+### End of License GPL section ###
+
+####End of GPL License section
+
+
+
+# The following part of this style-file is published under CCBYNCSA 3.0 by http://openmtbmap.org . See here for license details: http://creativecommons.org/licenses/by-nc-sa/3.0/
+# Please note: 
+# a) any works that build upon it, have to give attribution to openmtbmap.org
+# b) any maps generated by using the style-file or large parts of it have to give attribution to openmtbmap.org
+# c) reusing this style-file or partly reusing it for commercial products/projects is not allowed without special permission by http://openmtbmap.org 
+
+# 0x108 0x100 0x10b 0x10c all seem possible and free
+
+(place=* & name!=* & place_name=* ) {set name='${place_name}'}
+(place=* & name!=* & placename=*  ) {set name='${placename}' }
+
+natural=mud | landuse=mud {set natural=wetland}
+landuse=gravel_pit {set landuse=quarry}
+landuse=recreation_green {set landuse=recreation_ground}
+
+# Small prominent large area section to aid orientation
+landuse=water {set natural=water}
+( natural=forest | landuse=wood | natural=forrest | landuse=forrest ) {set landuse=forest}
+( landuse=forest | natural=wood ) {set 20resolution=yes} [0x50 resolution 20-18 continue with_actions]
+natural=glacier & 20resolution!=yes {set 20resolution=yes} [0x4d resolution 21-18 continue with_actions]
+( natural=lake | (natural=water & water=lake )) & 20resolution!=yes {set 20resolution=yes} [0x3c resolution 21-18 continue with_actions]
+natural=water & oxbow 			& 20resolution!=yes {set 20resolution=yes} [0x3c resolution 21-19 continue with_actions]
+natural=water & water=cove 		& 20resolution!=yes {set 20resolution=yes} [0x3c resolution 21-21 continue with_actions]
+natural=water & water=lagoon 	& 20resolution!=yes {set 20resolution=yes} [0x3c resolution 21-21 continue with_actions]
+natural=water & ( water=pond | natural=salt_pond | natural=pond) 		& 20resolution!=yes {set 20resolution=yes}
+natural=water & water=reflecting_pool 	& 20resolution!=yes {set 20resolution=yes}
+natural=water & water=reservoir	& 20resolution!=yes {set 20resolution=yes} [0x3c resolution 21-18 continue with_actions]
+natural=water & water=canal 	& 20resolution!=yes {set 20resolution=yes} [0x3c resolution 21-19 continue with_actions]
+natural=water  & 20resolution!=yes {set 20resolution=yes} [0x3c resolution 21-18 continue with_actions]
+# (natural=water | natural=coastline) & 20resolution!=yes {set 20resolution=yes} [0x3c resolution 21-19 continue with_actions]
+
+( landuse=residential | landuse=residental ) & 20resolution!=yes {set 20resolution=yes} [0x03 resolution 21-19 continue with_actions]
+( place=suburb | place=village | place=town ) & 20resolution!=yes & name=* {set 20resolution=yes} [0x03 resolution 21-20 continue with_actions]
+
+( natural=scree | landuse=scree )  & 20resolution!=yes {set 20resolution=yes} [0x11016 resolution 21-19 continue with_actions]
+( natural=bedrock | landuse=bedrock ) & 20resolution!=yes {set 20resolution=yes} [0x1100f resolution 21-19 continue with_actions]
+( natural=fell | landuse=fell ) & 20resolution!=yes {set 20resolution=yes} [0x11015 resolution 21-19 continue with_actions]
+
+
+( waterway=riverbank | riverbank=yes | riverbank=true |(natural=water & water=river) ) & 20resolution!=yes {set 20resolution=yes} [0x3e resolution 21-20 continue with_actions]
+( landuse=farmland | natural=farm | natural=farmland) & 20resolution!=yes {set 20resolution=yes} [0x11019 resolution 21-20 continue with_actions]
+natural=bay & 20resolution!=yes {set 20resolution=yes} [0x53 resolution 21-20 continue with_actions]
+( natural=heath | landuse=heat )& 20resolution!=yes {set 20resolution=yes} [0x11014 resolution 21-20 continue with_actions]
+( landuse=meadow | natural=meadow )& 20resolution!=yes {set 20resolution=yes} [0x33 resolution 21-20 continue with_actions]
+wood=mixed	 {set 20resolution=yes} [0x1101f resolution 21-21 continue with_actions]
+wood=deciduos | wood=deciduous	 {set 20resolution=yes} [0x1101e resolution 21-21 continue with_actions]
+wood=coniferous  {set 20resolution=yes} [0x1101d resolution 21-21 continue with_actions]
+landuse=forest & wood!=mixed & wood!=deciduos & wood!=deciduous & wood!=coniferous  {set 20resolution=yes} [0x50 resolution 21-21 continue with_actions]
+
+
+( landuse=quarry | landuse=surface_mining | natural=quarry ) & 20resolution!=yes {set 20resolution=yes} [0x11 resolution 21-21 continue with_actions]
+(natural=basin | landuse=basin) & 20resolution!=yes {set 20resolution=yes} [0x46 resolution 21-21 continue with_actions]
+( landuse=farmyard | landuse=farm  | natural=farm | natural=farmland ) & 20resolution!=yes {set 20resolution=yes} [0x11019 resolution 21-21 continue with_actions]
+water=tidal		& 20resolution!=yes {set 20resolution=yes} [0x1101b resolution 21-21 continue with_actions]
+natural=park & 20resolution!=yes {set 20resolution=yes} [0x28 resolution 21-21 continue with_actions]
+(leisure=nature_reserve | leisure=natural_reserve) & 20resolution!=yes {set 20resolution=yes} [0x16 resolution 21-21 continue with_actions]
+
+
+loc_name=* 								{ set name='${loc_name}' }
+int_name=* 								{ set name='${int_name}' }
+int_name!=* & name:en=* 				{ set name='${name:en}' }
+int_name!=* & name:en!=* & name:de=* 	{ set name='${name:de}' }
+
+
+
+addr:housenumber=* & name=* {name '${name} (${addr:housenumber})'}
+addr:housenumber=* & addr:housename=* {name '${addr:housename} ${addr:housenumber}'}
+addr:housename=* & name!=* {name '${addr:housename}'}
+addr:housenumber=* {name '${addr:housenumber}'}
+
+opening_hours=* {set addr:city = '${addr:city} open ${opening_hours}' | 'open ${opening_hours}'}
+note=* {set addr:city = '${addr:city} (${note})' | '${note}'}
+
+# Add huts / hotels / campsites polygon for searchability.
+tourism=alpine_hut | amenity=alpine_hut | building=alpine_hut				{ set name= '${name} ${operator} alpine_hut' | '${name} alpine_hut' | 'alpine_hut' } 				[0x13 resolution 21]
+tourism=wilderness_hut | amenity=wilderness_hut | building=wilderness_hut | ( tourism=cabin & ( service=self | (service=* & service!=no) )) { set name= '${name} ${operator} wilderness_hut' | '${name} wilderness_hut' | 'wilderness_hut' } [0x13 resolution 22]
+tourism=basic_hut | amenity=basic_hut | building=basic_hut | tourism=bothy	| (tourism=cabin & ( service=no | service!=*))	{ set name= '${name} ${operator} basic_hut' | '${name} basic_hut' | 'basic_hut' } 				[0x13 resolution 22]
+tourism=lean_to | amenity=lean_to											{ set name= '${name} lean_to' | 'lean_to' } 														[0x13 resolution 24]
+tourism=hotel 																{ set name= '${name} ${operator} hotel' | '${name} hotel' | 'hotel' }								[0x13 resolution 24]
+tourism=motel 																{ set name= '${name} ${operator} motel' | '${name} motel' | 'motel' }								[0x13 resolution 24]
+tourism=camp_site | landuse=camp_site										{ set name= '${name} ${operator} camping' | '${name} camping' | 'campsite' }						[0x03 resolution 24 continue]
+tourism=caravan_site | landuse=caravan_site									{ set name= '${name} ${operator} caravan' | '${name} caravan' | 'caravan_site' }					[0x03 resolution 24 continue]
+tourism=chalet & building!=*																																					[0x13 resolution 24]
+
+landuse=commercial | landuse=comercial [0x10f07 resolution 22 continue]
+landuse=residential | landuse=residental | natural=residental | natural=residential [0x03 resolution 22]
+# landuse ~ 'residential\|residental' [0x03 resolution 21]
+# place ~ 'town\|suburb\|village\|hamlet' [0x03 resolution 21]
+( place=suburb | place=village | place=town ) & name=* [0x03 resolution 22]
+place=hamlet & name=* [0x03 resolution 22]
+leisure=nature_reserve | leisure=natural_reserve [0x16 resolution 22]
+amenity=prison [0x13 resolution 23]
+
+landuse=military | natural=military [0x04 resolution 21 continue]
+( military=danger_area | military=range ) & landuse!=military [0x04 resolution 22 continue]
+military=airfield [0x31 resolution 22]
+military=barracks | military=bunker | military=range [0x13 resolution 24]
+
+amenity=parking | parking=surface | amenity=parking_space [0x05 resolution 24]
+area=true | area=1 {set area=yes}
+highway=pedestrian & area=yes [0x07 resolution 23]
+highway=* & area=yes [0x07 resolution 23]
+amenity=bicycle_parking [0x06 resolution 23]
+amenity=supermarket | shop=supermarket | building=supermarket [0x08 resolution 22]
+amenity=retail | landuse=retail | natural=retail [0x08 resolution 22]
+leisure=water_park [0x09 resolution 22]
+building=no | building=room | building=entrance | building=building_entrance {delete building}
+# [0x10 resolution 22] not displaying
+leisure=playground [0x11002 resolution 22]
+amenity=school | amenity=preschool | amenity=kindergarten [0x0a resolution 23]
+amenity=college [0x0a resolution 23]
+amenity=hospital [0x0b resolution 22]
+landuse=industrial | natural=industrial | landuse=harbour | landuse=harbor [0x0c resolution 22]
+power=generator | power=sub_station  [0x0c resolution 23]
+power=station [0x0c resolution 22]
+place=locality [0x0d resolution 24]
+aeroway=apron | landuse=runway  [0x0e resolution 22]
+sport=model_aerodrome [0x0e resolution 23]
+landuse=quarry | landuse=surface_mining | natural=quarry [0x11 resolution 22]
+building=tramdepot [0x10f05 resolution 23]
+historic=archaeological_site [0x12 resolution 22]
+building=university [0x34 resolution 23]
+amenity=university & building=* [0x34 resolution 23]
+amenity=university [0x14 resolution 23]
+building=cathedral [0x15 resolution 22]
+building=church | amenity=place_of_worship [0x15 resolution 23]
+leisure=track [0x19 resolution 22]
+landuse=village_green | natural=village_green [0x17 resolution 22]
+landuse=recreation_ground | ( landuse=grass & source!=3dShapes ) | leisure=recreation_ground | landuse=field | natural=recreation_ground [0x17 resolution 22]
+landuse=recreation | leisure=village_green | natural=recreation [0x17 resolution 22]
+leisure=common [0x0d resolution 22]
+leisure=golf_course [0x18 resolution 22]
+sport=golf [0x18 resolution 22]
+
+# need own type for swimming
+leisure=miniature_golf | sport=miniature_golf   [0x11011 resolution 23]
+leisure=pitch | landuse=pitch [0x11012 resolution 23 continue]
+sport=pitch [0x11010 resolution 23]
+sport=baseball [0x11010 resolution 23]
+sport=basketball [0x11004 resolution 23]
+sport=boules | sport=bowls [0x19 resolution 24]
+sport=cricket [0x11010 resolution 23]
+sport=cricket_nets | sport=gymnastics [0x19 resolution 23]
+sport=croquet [0x11010 resolution 23]
+sport=hockey [0x11005 resolution 23]
+sport=pelota [0x19 resolution 23]
+sport=racquet [0x19 resolution 23]
+sport=rugby [0x11006 resolution 23]
+sport=multi [0x19 resolution 23]
+# sport=skiing [0x13 resolution 22]
+amenity=grave_yard | amenity=graveyard [0x1a resolution 23]
+landuse=cemetary | landuse=cemetery  [0x1a resolution 23]
+sport=climbing [0x1b resolution 23]
+sport=soccer | sport=football |  sport=australian_football [0x1c resolution 23]
+leisure=stadium [0x1d resolution 22]
+sport=tennis [0x1e resolution 23]
+sport=beachvolleyball | sport=beach_volleyball | leisure=beachvolleyball | leisure=beach_volleyball [0x10f13 resolution 23]
+leisure=sport_center | leisure=sport_centre | leisure=sports_center | leisure=sports_centre | leisure=ice_rink [0x1f resolution 23]
+sport=motor [0x20 resolution 22]
+landuse=railway [0x21 resolution 23]
+sport=skating [0x22 resolution 24]
+sport=skateboard [0x22 resolution 24]
+sport=table_tennis [0x23 resolution 24]
+sport=athletics [0x24 resolution 23]
+building=sport [0x25 resolution 23]
+natural=orchard | landuse=orchard | landuse=orchards | natural=orchards | landuse=greenhouse_horticulture | landuse=plant_nursery [0x10f14 resolution 22]
+
+manmade=* & man_made!=* {set man_made='${manmade}'}
+landuse=allotements | landuse=allotments | landuse=allotment | natural=allotment | mandmade=allotments | man_made=allotments | leisure=allotments | man_made=allotements | natural=allotments | natural=allotements | leisure=allotements  [0x4e resolution 22]
+leisure=park [0x27 resolution 21]
+natural=park | landuse=park [0x28 resolution 22]
+building=commercial [0x29 resolution 23]
+# 0x2a-0x2f reserved for wildcards
+landuse=vineyard | natural=vineyard | landuse=vine_yard | natural=vine_yard [0x30 resolution 21]
+aeroway=airport [0x31 resolution 22]
+aeroway=aerodrome [0x31 resolution 22]
+aeroway=terminal [0x32 resolution 22]
+landuse=meadow | natural=meadow [0x33 resolution 22]
+building=train_station | building=station [0x43 resolution 23]
+railway=station [0x43 resolution 23]
+man_made=wastewater_plant [0x3b resolution 23]
+man_made=pool | amenity=swimming_pool | leisure=swimming_pool [0x3d resolution 22]
+sport=swimming | man_made=pool[0x3d resolution 22]
+natural=lake [0x3c resolution 22]
+natural=salt_pond | water=salt_pond | landuse=salt_pond[0x3c resolution 22]
+landuse=pond | leisure=fishing [0x3c resolution 23]
+waterway=riverbank | riverbank=yes | riverbank=true |(natural=water & water=river) [0x3e resolution 22]
+
+
+
+healthcare=* [0x0b resolution 23]
+natural=reservoir| landuse=reservoir | (natural=water & water=reservoir) [0x3f resolution 22]
+basin=retention [0x46 resolution 22]
+natural=basin [0x41 resolution 22]
+landuse=basin [0x41 resolution 22]
+tourism=zoo | amenity=zoo | zoo=enclosure [0x42 resolution 22]
+building=railroad_station [0x43 resolution 22]
+man_made=works [0x10f05 resolution 23]
+landuse=construction | natural=construction [0x1100e resolution 22]
+landuse=greenfield | natural=greenfield [0x44 resolution 22]
+landuse=brownfield | natural=brownfield [0x45 resolution 22]
+landuse=farmyard [0x4c resolution 22]
+landuse=farmland | landuse=farm | natural=farm | natural=farmland | natural=farmyard [0x11019 resolution 21]
+
+
+natural=glacier | landuse=glacier [0x4d resolution 22]
+leisure=garden & access!=private [0x11018 resolution 22]
+
+natural=scrub | natural=shrub | natural=scrubland | natural=scrubs | natural=shrubs | natural=shrubland[0x11017 resolution 21]
+landuse=scrub | landuse=shrub | landuse=scrubland | landuse=scrubs | landuse=shrubs | landuse=shrubland[0x11017 resolution 21]
+# natural ~ 'scrub\|shrub\|scrublands\|scrubs' [0x11017 resolution 21]
+natural=scree | landuse=scree [0x11016 resolution 22]
+natural=bedrock | landuse=bedrock [0x1100f resolution 22]
+natural=fell | landuse=fell [0x11015 resolution 22]
+natural=heath [0x11014 resolution 22]
+# natural ~ 'marsh\|wetland' [0x1101c resolution 21]
+natural=marsh | landuse=marsh | natural=wetland | landuse=wetland [0x1101c resolution 21]
+natural=mud | landuse=mud [0x51 resolution 22]
+landuse=landfill | natural=landfill [0x52 resolution 22]
+natural=bay | landuse=bay [0x53 resolution 22]
+building=tower [0x55 resolution 23]
+
+amenity=post_office | amenity=bank [0x1100b resolution 23]
+
+amenity=townhall | amenity=arts_centre | amenity=cinema | amenity=theatre | amenity=library | amenity=public_building [0x11008 resolution 23]
+amenity=courthouse | amenity=police | amenity=embassy | amenity=firestation | amenity=fire_station [0x11009 resolution 23]
+amenity=dentist | amenity=doctors | amenity=pharmacy | amenity=veterinary [0x1100a resolution 24]
+amenity=cafe | amenity=fast_food | amenity=restaurant | amenity=pub | amenity=food_court [0x13 resolution 24]
+shop=* [0x11007 resolution 24]
+
+natural=bare_rock { set name= '${name} rock' | 'bare_rock' } [0x1100e resolution 21]
+( natural=cliff | landuse=cliff ) & area=yes	{ set name= '${name} cliff' | 'cliff' } [0x1100e resolution 22]
+
+leisure=marina [0x1100c resolution 22]
+sport=rugby [0x11006 resolution 23]
+sport=hockey [0x11005 resolution 23]
+sport=basketball [0x11004 resolution 23]
+sport=horse_racing [0x11003 resolution 22]
+sport=equestrian [0x11003 resolution 22]
+waterway=dock [0x11001 resolution 22]
+waterway=boatyard [0x11000 resolution 22]
+waterway=dam & area=yes [0x13 default_name="dam" resolution 22]
+man_made=pier & area=yes [0x13 default_name="pier" resolution 22]
+man_made=groyne & area=yes [0x13 default_name="groyne" resolution 23]
+man_made=breakwater & area=yes [0x13 default_name="breakwater" resolution 23]
+
+natural=beach | natural=sand | landuse=beach | landuse=sand	[0x1100d resolution 21]
+surface=sand & area=yes	[0x1100d resolution 22]
+surface=sand & highway!=* [0x1100d resolution 22]
+water=tidal		[0x1101b resolution 22]
+
+
+
+natural=shelf | tidal=yes | tidal=true	[0x1101b resolution 22]
+wood=mixed	[0x1101f resolution 22]
+wood=deciduos | wood=deciduous	[0x1101e resolution 22]
+wood=coniferous [0x1101d resolution 22]
+man_made=gasometer | man_made=wastewater_plant | man_made=sewerage_plant 	[0x10f05 resolution 24]
+landuse=forest | natural=wood | landuse=wood | natural=forest [0x50 resolution 22]
+
+(landuse=conservation | landuse=nature_reserve | leisure=natural_reserve | landuse=natural_reserve | leisure=nature_reserve | landuse=nature_reserve) & natural!=* [0x1090d resolution 22]
+# http://wiki.openstreetmap.org/wiki/Tag:boundary%3Dprotected_area would be more appropriate to implement, but would need a lot of time to implement well. Without semitransparency this will be problematic.
+
+historic=battlefield [0x1101a resolution 22]
+# natural=coastline [0x3c resolution 20]
+# natural=water & name=* [0x3c resolution 22]
+natural=water [0x3c resolution 22]
+( water=yes | water=true ) [0x3c resolution 22]
+
+amenity=fuel [0x10f05 resolution 24]
+amenity=toilets [0x10f05 resolution 24]
+amenity=bus_station [0x13 resolution 24]
+
+
+( building=yes | building=true ) & name=*		[0x13 resolution 24]
+aeroway=hangar									[0x13 resolution 24]
+building=hut									[0x13 resolution 24]
+( building=yes | building=true )				[0x10f05 resolution 24]
+parking=multi-storey 							[0x10f05 resolution 24]
+building=* 	| barrier=toll_booth				[0x10f16 resolution 24]
+
+
+natural=sea  [0x10f1d resolution 14]
+landuse=sea  [0x10f1d resolution 18]
+landuse=sea  [0x10f1d resolution 18]
+( natural=land | landuse=land ) [0x10101 resolution 21-14 continue]
+( natural=land | landuse=land )| ( place=island & name=* ) [0x10100 resolution 22]
+
+leisure=*  										[0x10f17 resolution 24]
+tourism=*  										[0x10f18 resolution 24]
+sport=* & sport!=skiing & sport!=ski			[0x10f19 resolution 24]
+# landuse=* & fixme!=* & landuse!=commercial	[0x10f1a resolution 24]
+# landuse=* & landuse!=commercial				[0x2d resolution 24]
+natural=*  & natural!=mountain_range & natural!=mountainrange	[0x10f1b resolution 24]
+# man_made=*  & fixme!=* 						[0x10f15 resolution 24]
+amenity=* 	 									[0x10f1c resolution 24]

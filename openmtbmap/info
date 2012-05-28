@@ -1,0 +1,18 @@
+#
+# This file contains information about the style.
+# It is completely optional.
+# 
+
+# A short one line description of the style
+#
+summary: Openmtbmap
+
+# A longer description of the style.
+#
+description {	
+Use this style to create the openmtbmap. The most used GPS maps worldwide for mtbiking.
+}
+
+# Version of the style itself
+#
+version=1.0

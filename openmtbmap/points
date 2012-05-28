@@ -1,0 +1,1262 @@
+####start of GPL License section (note license for other parts):
+
+mkgmap:country!=* & mkgmap:admin_level2=* { set mkgmap:country='${mkgmap:admin_level2}' }
+mkgmap:country!=* & addr:country=* { set mkgmap:country='${addr:country}' }
+mkgmap:country!=* & is_in:country=* { set mkgmap:country='${is_in:country}' }
+
+# country specific rules first
+
+# Netherlands = NLD
+mkgmap:country=NLD & mkgmap:region!=* & mkgmap:admin_level4=* { set mkgmap:region='${mkgmap:admin_level4}' }
+mkgmap:country=NLD & mkgmap:city!=* & mkgmap:admin_level10=* { set mkgmap:city='${mkgmap:admin_level10}' } 
+mkgmap:country=NLD & mkgmap:city!=* & mkgmap:admin_level8=* { set mkgmap:city='${mkgmap:admin_level8}' } 
+
+# Germany = DEU cities
+mkgmap:country=DEU & ( mkgmap:admin_level4=Hamburg | mkgmap:admin_level4=Berlin | mkgmap:admin_level4=Bremen ) {set mkgmap:city='${mkgmap:admin_level4|subst:Gemeinde |subst:Stadt }' }
+mkgmap:country=DEU & mkgmap:city!=* & mkgmap:admin_level8=* { set mkgmap:city='${mkgmap:admin_level8|subst:Gemeinde |subst:Stadt }' }
+mkgmap:country=DEU & mkgmap:city!=* & mkgmap:admin_level7=* { set mkgmap:city='${mkgmap:admin_level7}' } 
+mkgmap:country=DEU & mkgmap:city!=* & mkgmap:admin_level6=* { set mkgmap:city='${mkgmap:admin_level6}' } 
+mkgmap:country=DEU & mkgmap:city!=* & mkgmap:admin_level9=* { set mkgmap:city='${mkgmap:admin_level9}' } 
+mkgmap:country=DEU & mkgmap:city!=* & mkgmap:admin_level10=* { set mkgmap:city='${mkgmap:admin_level10}' } 
+
+# Austria = AUT  --- Vienna problems
+(mkgmap:country=DE | mkgmap:country=AUT | mkgmap:country=AT | mkgmap:country=CH | mkgmap:country=SUI | mkgmap:country=CHE ) & mkgmap:city!=* & mkgmap:admin_level8=* { set mkgmap:city='${mkgmap:admin_level8|subst:Gemeinde |subst:Stadt |subst:Bezirk}' }
+mkgmap:country=BEL & mkgmap:city!=* & mkgmap:admin_level8=* { set mkgmap:city='${mkgmap:admin_level8}' }
+mkgmap:country=CZE & mkgmap:city!=* & mkgmap:admin_level8=* { set mkgmap:city='${mkgmap:admin_level8}' }
+mkgmap:country=CZE & mkgmap:city!=* & mkgmap:admin_level7=* { set mkgmap:city='${mkgmap:admin_level7}' }
+mkgmap:country=DNK & mkgmap:city!=* & mkgmap:admin_level8=* { set mkgmap:city='${mkgmap:admin_level8}' }
+mkgmap:country=DNK & mkgmap:city!=* & mkgmap:admin_level7=* { set mkgmap:city='${mkgmap:admin_level7}' }
+mkgmap:country=FIN & mkgmap:city!=* & mkgmap:admin_level9=* { set mkgmap:city='${mkgmap:admin_level9}' }
+mkgmap:country=FIN & mkgmap:city!=* & mkgmap:admin_level8=* { set mkgmap:city='${mkgmap:admin_level8}' }
+mkgmap:country=FRA & mkgmap:city!=* & mkgmap:admin_level9=* { set mkgmap:city='${mkgmap:admin_level9}' }
+mkgmap:country=FRA & mkgmap:city!=* & mkgmap:admin_level8=* { set mkgmap:city='${mkgmap:admin_level8}' }
+mkgmap:country=ISL & mkgmap:city!=* & mkgmap:admin_level8=* { set mkgmap:city='${mkgmap:admin_level8}' }
+mkgmap:country=ITA & mkgmap:city!=* & mkgmap:admin_level8=* { set mkgmap:city='${mkgmap:admin_level8}' }
+mkgmap:country=LUX & mkgmap:city!=* & mkgmap:admin_level8=* { set mkgmap:city='${mkgmap:admin_level8}' }
+mkgmap:country=NOR & mkgmap:city!=* & mkgmap:admin_level9=* { set mkgmap:city='${mkgmap:admin_level9}' }
+mkgmap:country=POL & mkgmap:city!=* & mkgmap:admin_level10=* { set mkgmap:city='${mkgmap:admin_level10}' }
+mkgmap:country=POL & mkgmap:city!=* & mkgmap:admin_level8=* { set mkgmap:city='${mkgmap:admin_level8}' }
+mkgmap:country=PRT & mkgmap:city!=* & mkgmap:admin_level9=* { set mkgmap:city='${mkgmap:admin_level9}' }
+mkgmap:country=PRT & mkgmap:city!=* & mkgmap:admin_level8=* { set mkgmap:city='${mkgmap:admin_level8}' }
+mkgmap:country=SVN & mkgmap:city!=* & mkgmap:admin_level10=* { set mkgmap:city='${mkgmap:admin_level10}' }
+mkgmap:country=ESP & mkgmap:city!=* & mkgmap:admin_level8=* { set mkgmap:city='${mkgmap:admin_level8}' }
+mkgmap:country=SWE & mkgmap:city!=* & mkgmap:admin_level9=* { set mkgmap:city='${mkgmap:admin_level9}' }
+mkgmap:country=SWE & mkgmap:city!=* & mkgmap:admin_level7=* { set mkgmap:city='${mkgmap:admin_level7}' }
+mkgmap:country=CHE & mkgmap:city!=* & mkgmap:admin_level8=* { set mkgmap:city='${mkgmap:admin_level8}' }
+ 
+( mkgmap:country=AUT | mkgmap:country=AT ) & mkgmap:admin_level4=* & ( name=wien | name=Wien ) { set mkgmap:city='${mkgmap:admin_level4|subst:Gemeinde |subst:Stadt |subst:Bezirk}' }
+( mkgmap:country=AUT | mkgmap:country=AT ) & ( mkgmap:region=Wien | mkgmap:region=wien ) { set mkgmap:city='${mkgmap:admin_level4|subst:Gemeinde |subst:Stadt |subst:Bezirk}' }
+ 
+# common rules for all the rest of countries
+mkgmap:region!=* & mkgmap:admin_level6=* { set mkgmap:region='${mkgmap:admin_level6}' } 
+mkgmap:region!=* & mkgmap:admin_level5=* { set mkgmap:region='${mkgmap:admin_level5}' } 
+mkgmap:region!=* & mkgmap:admin_level4=* { set mkgmap:region='${mkgmap:admin_level4}' } 
+mkgmap:region!=* & mkgmap:admin_level3=* { set mkgmap:region='${mkgmap:admin_level3}' } 
+mkgmap:region!=* & is_in:county=* { set mkgmap:region='${is_in:county}' } 
+
+
+mkgmap:city!=* & mkgmap:admin_level8=* { set mkgmap:city='${mkgmap:admin_level8}' } 
+mkgmap:city!=* & mkgmap:admin_level7=* { set mkgmap:city='${mkgmap:admin_level7}' } 
+mkgmap:city!=* & mkgmap:admin_level9=* { set mkgmap:city='${mkgmap:admin_level9}' } 
+mkgmap:city!=* & mkgmap:admin_level10=* { set mkgmap:city='${mkgmap:admin_level10}' } 
+mkgmap:city!=* & is_in:city=* { set mkgmap:city='${is_in:city}' }
+mkgmap:city!=* & addr:city=* { set mkgmap:city='${addr:city}' }
+
+
+mkgmap:postal_code!=* & mkgmap:postcode=* { set mkgmap:postal_code='${mkgmap:postcode}' } 
+mkgmap:postal_code!=* & addr:postcode=* { set mkgmap:postal_code='${addr:postcode}' } 
+
+mkgmap:street!=* & addr:street=* { set mkgmap:street='${addr:street}' }
+mkgmap:street!=* & addr:housename=* { set mkgmap:street='${addr:housename}' }
+
+mkgmap:housenumber!=* & addr:housenumber=* { set mkgmap:housenumber='${addr:housenumber}' }
+
+mkgmap:phone!=* & phone=* { set mkgmap:phone='${phone}' }
+mkgmap:phone!=* & contact:phone=* { add mkgmap:phone='${contact:phone}' }
+mkgmap:phone!=* & contact:website=* { add mkgmap:phone='${contact:website}' }
+mkgmap:phone!=* & url=* { add mkgmap:phone='${url}' }
+mkgmap:phone!=* & wikipedia=* { add mkgmap:phone='${wikipedia}' }
+mkgmap:phone!=* & contact:email=* { add mkgmap:phone='${contact:email}' }
+
+mkgmap:is_in!=* & is_in=* {set mkgmap:is_in='${is_in}' } 
+
+# to use --add-pois-to-lines option the command is like
+# key=value & mkgmap:line2poitype=mid {set name='${key}' }   [0x???? resolution 24]
+# with  start- The first point of the line, end - The last point of the line, inner- Each point of the line except the first and the last, mid- The middle point
+####End of GPL License section
+
+# This style-file is published under CCBYNCSA 3.0 by http://openmtbmap.org . See here for license details: http://creativecommons.org/licenses/by-nc-sa/3.0/
+# Please note: 
+# a) any works that build upon it, have to give attribution to openmtbmap.org
+# b) any maps generated by using the style-file or large parts of it have to give attribution to openmtbmap.org
+# c) reusing this style-file or partly reusing it for commercial products/projects is not allowed without special permission by http://openmtbmap.org 
+
+
+# New Todo:
+# try to find new shop symbols that disappear earlier for some shops....
+# fiddle up bank and atm to different symbols...
+# There can be more church icons (0x10d0d and onwards)
+# need symbol for theme_park (currently it uses water_park symbol).
+# not used yet: tides ; currents ; marine_services ; anchorages ; restricted areas 
+
+# Resolution examples: 
+# 80m instead of resolution 22 on etrex 30: Marina 0x11009; Sports_centre 0x10d08; 0x10e09; 0x11619; 0x10d04; 0x11701; 0x10d04; 0x10c05; 0x10c07; 0x11008; 0x11002; 0x11006; 0x10903; 0x11102 (only with map points: off).
+# resolution 24 instead of 22 in Mapsource/Basecamp: Marina 0x11009; sports centre 0x2c08 and stadium 0x10d08; swimming 0x10e09; 0x10d04 viepoint; 0x10d06 picnis; 0x10c03 and 0x10c05 (campsite/caravan site); 
+# 0x10c07 alpine hut; 0x11008 (station); 0x11002 hospital; 0x11106 border_controll; 0x2c0f monument; 
+
+# Missing: amenity=marketplace
+# Need icon for hot_spring
+# Need icon for casino
+# Need icon for university
+# need new icon for 0x2f07 (or best find alternative icon for car with alternative type)
+
+#### new POI categories
+
+# 0x3300 -- 0x1991e is NOT found via "nearest places".
+
+# Not shown on Oregon
+# 1951
+# 2b05 to 2b09
+# 2a15 to 2a1f
+# 2f17 to 2f1f
+# 2c15 to 2c1f and 2c0c to 2e0f
+# 2e1c to 2e1f and 2e0c to 2e0f
+# 1860a and up (18600 to 18609 seems to be shown)
+# 1761? not shown.
+# Could try 0x1a??? as well as 0x1b???
+
+
+# Also see http://wiki.openstreetmap.org/wiki/OSM_Map_On_Garmin/POI_Types
+
+# Category Cities:
+# 0x2722 and 0x72e and 0x92a and 0xa26 and 0xa2c and 0xb28 and 0xb2e and 0xd24 and 0xd2a plus many many unknown
+
+# Category: Attractions
+# Amusement Theme Park 0x2c21 and 0x2c1 (not the same symbol) and 0x2d28 and 0x2d8 (same symbol)
+# Arena Track: 0x2c28 and 0x2c8 (same symbol) 
+# Hall Auditorium: 0x2c29 and 0x2c9 (same symbol)
+# Landmark: 0x2c24, 0x2c4 and 0x2c27, 0x2c7 and 0x520, 0x521, 0x522, 0x521c-0x522f, 0x523-0x527
+# Museum: 0x2c22 and 02c2 (same symbol)
+# Park Garden 0x2c0, 0x2c20 and 0x2c26, 0x2c6 and 0x490-0x497 and 0x4925-0x492f and  0x4a0-0x4a7 and 0x4a27-0x4a2f and 0x642e, 0x64e
+# Winery 0x2c2a, 0x2ca
+
+# Category: Auto Services
+# Auto Club= 0x2f0d ... 0x2f2d and 0x2fd - 0x2f2d used for streetname pois.
+# Auto Rental= 0x2f2 and 0x2f22
+# Auto Repair= 0x2f23 and 0x2f3
+# Car wash= 0x2f0e and 0x2fe
+# Auto Dealer / Parts 0x311? all found. 0x3120, 0x3121 and 0x310e and 0x310f too
+# Parking all 0x4d1? found as well as 0x4d20, 0x4d21, 0x4d0e, 0x4d0f
+# Rest Area / Tourist Info: 0x511? and 0x5014 to 0x501b (probably all are found anyhow), also 0x2f0c (is rest area)
+# Truck Stop 0x2f16
+# Wrecker Service 0x2f0a and 0x2fa (not the same typfile symbol)
+
+
+# Category Bank/ATM 0x2f26 and 0x2f6 (not the same symbol)
+
+
+# Category Community
+# Boarder Crossing: 0x3026 and 0x11106 
+# City Hall 0x3023 and 0x303 (same symbol)
+# Community Center 0x3025 and 0x305 (same symbol)
+# Court House 0x3024 and 0x304 (same symbol)
+# Fire Department: 0x3028 and 0x308 (same symbol)
+# Government office: 0x3020 and 0x3027 and 0x300 and 0x307 (same symbol)
+# Library: 0x2c23 and 0x2c3 (same symbol)
+# Place of Worship: 0x2c2b and 0x6424 and 0x2c2 and 0x644 (same symbol)
+# Police Station: 0x3021 and 0x301
+# Post Office: 0x2f25 and 0x642f and 0x2f5 and 0x64f (same symbol)
+# 0x2c25 and 0x2c5 and 0x10d05 (same symbol)
+# Utility: 0x2f15
+
+
+# Category Entertainment:
+# Bar/Nightclub: 0x2d22 and 0x4613-0x462f
+# Casino: 0x2d24 and 0x2d4 (there have to be more)
+# Hall Auditorium: 0x2c29 and 0x2c9 (same symbol)
+# Live Theater: 0x02d and 0x2d0 and 0x2d01, 0x2d20, 0x2d21
+# Movie Theater: 0x2d23 and 0x2d3 (not the same symbol)
+
+# Category Food and Drink (only additional)
+# American 0x2ae and 0x2a1
+# Other 0x451? and 0x45?
+
+# Category Food and Drink: Mapsource Crash
+
+
+# Category Fuel:
+# Auto Fuel 0x4410-0x442f and 0x44? and 0x2f1
+# Convenience 0x2e26 and 0x2e6 (same symbol)
+# Truck Stop 0x2f16
+
+
+# Category Geographic Places:
+# Land: 0x6610-0x662f and 0x66?
+# Man-Made 0x10d05-0x642f and 0x64?
+# Water: 0x6510-0x652b 
+
+
+# Category Hospital 0x4b10-0x4b2f and 0x6428 and 0x648 (same symbol) and 0x302 and 0x4b?
+
+
+# Category Other
+# Business 0x2f11 (not used)
+# Communications: 0x2f12
+# Garmin 0x2ff (and another not found)
+# Marina / Repair Storage: 0x43? and 0x431? (not used)
+# other 0x2f00 and 0x0f0 (not used)
+# Personal 0x2f10 (not used)
+# Repair: 0x2f13
+# Social: 0x2f14
+
+
+# Category Recreation
+# Amusement Theme Park 0x2c21 and 0x2c1 (not the same symbol)
+# Arena Track: 0x2c28 and 0x2c8 (same symbol)
+# Bowling: 0x2c27 and 0x2c7 (not the same symbol)
+# Golf Course: 0x402? and 0x401? and 0x40? and 0x10e05
+# Park Garden: 0x2c6 and 0x4916-0x491f and 0x4928-0x492f and 0x49? and 0x4a16-0x4a1f and 0x4a26-0x4a2f and 0x642e and 0x64e (not the same symbol)
+# Public Sports Airport: 0x2d2b and 0x2db (same symbol)
+# Skiing Center: 0x5310-0x531f and 0x5320-0x532f and 0x53?
+# Sports / Fitness Center 0x2d9 and 0x2da and 0x5c2? and 0x54? and 0x1181? 0x542d-0x542f (swimming) and 0x5c1?
+
+
+# Category Shopping (allways same symbol)
+# Apparel 0x2e7 and 0x2e27 (same symbol)
+# Computer 0x2eb and 0x2e2b (same symbol)
+# Convenicence 0x2e26 and 0x2e6
+# Department 0x2e21 and 0x1170
+# General Merchandise: 0x02e and 0x2e3 and 0x2e0 plus unknown
+# Grocery 0x2e22 and 0x2e2
+# Home Furnishings 0x2e29 and 0x2e9
+# House and Garden 0x2e28 and 0x2e8
+# Pharmacist 0x2e25 and 0x2e5
+# Shopping Center 0x2e24 and 0x2e4
+# Speciality Retail 0x2e2a and 0x2ea
+
+# Category Lodging
+# Campground 0x481c-0x482f and 0x2b3 and 0x48?
+# Hotel/Motel 0x2b20-0x2b24 and 0x2b0-0x2b4 (same symbols)
+## Category Lodging
+# 0x10c?? behaves exactly like 0x2b??!!!
+# 0x2b00 other
+# 0x2b01 hotel/motel
+# 0x2b02 guesthouse
+# 0x2b03 Mapsource/Basecamp Campground. etrex30 not found. Maybe RV-Park.
+# 0x2b04 is Resort
+# 0x2b05 Campground
+# 0x2b04 is Park (shows up in Mapsource under Campground)
+# 0x2b07 is Sporting and Instructional Camp
+# 0x2b08 and up not found
+
+# Category Transportation
+# Air Transportation: 0x590? and 0x591? and 0x59c - 0x59f and 0x2f4 and 0x2f24
+# Auto Rental 0x2f2 and 0x2f22 (same symbol)
+# Ground transportation 0x2f8 and 0x2f28 (same symbol)
+# Transit: 0x2f17
+
+
+################### Category Marine Services on etrex 30
+# Food and drink 0x1200 (Mapsource under Marine Services)
+# Water 0x1200 (Mapsource under Marine Services)
+######## Tides
+# no subcategories 0x1d00-0x1d03, 06
+######## Obstructions
+# 0x1c00 & 0x1c03 (maybe more)
+
+
+# 	new AccessMapping("access",     RoadNetwork.NO_MAX), // must be first in list
+#		new AccessMapping("bicycle",    RoadNetwork.NO_BIKE),
+#		new AccessMapping("foot",       RoadNetwork.NO_FOOT),
+#		new AccessMapping("hgv",        RoadNetwork.NO_TRUCK),
+#		new AccessMapping("motorcar",   RoadNetwork.NO_CAR),
+#		new AccessMapping("motorcycle", RoadNetwork.NO_CAR),
+#		new AccessMapping("psv",        RoadNetwork.NO_BUS),
+#		new AccessMapping("taxi",       RoadNetwork.NO_TAXI),
+#		new AccessMapping("emergency",  RoadNetwork.NO_EMERGENCY),
+#		new AccessMapping("delivery",   RoadNetwork.NO_DELIVERY),
+#		new AccessMapping("goods",      RoadNetwork.NO_DELIVERY),
+
+# Delete List
+( highway=proposed | proposed=* ) & highway=* {set highway=grsz}
+
+# Correct wrong tags
+amenity=drinking-water {set amenity=drinking_water }
+amenity=Bar {set amenity=bar }
+leisure=Freibad {set leisure=water_park }
+leisure=Schwimmbad{set leisure=water_park }
+manmade=* {add man_made='${manmade}'
+amenity=arzt {set amenity=doctors}
+amenity=briefkasten {set amenity=post_box}
+historic=memorial & memorial:type=stolperstein {delete historic}
+historic=memorial & cemetery=grave {delete historic}
+building=church|building=chapel						{add amenity=place_of_worship}
+tourism=information & name=Parkleitsystem { delete tourism }
+man_made=communication_tower {set man_made=communications_tower}
+
+
+# Naming
+elevation=* { add ele='${elevation}' }
+mountainpass=true | mountain_pass=true {set mountain_pass=yes}
+ele>0 & ( natural=peak | natural=summit | natural=mountain | natural=col | natural=saddle | tourism=* | amenity=refuge | building=refuge | aerialway=* | railway=* | mountainpass=yes | mountain_pass=yes | highway=mountainpass | highway=mountain_pass | man_made=communications_tower | man_made=tower | man_made=pylon | information=* ) {set name='${name} ${ele}m' | '${ele}m' }
+ele=* & !(ele>0) & ( natural=peak | natural=summit | natural=mountain | natural=col | natural=saddle | tourism=* | amenity=refuge | building=refuge | aerialway=* | railway=* | mountainpass=yes | mountain_pass=yes | highway=mountainpass | highway=mountain_pass | man_made=communications_tower | man_made=tower | man_made=pylon | information=* ) {set name='${name} ${ele}' | '${ele}m' }
+
+(( railway=station | railway=subway_entrance | railway=subwayentrance | railway=halt | railway=tram_stop | 
+railway=tramstop | railway=stop | railway=bus_station | railway=busstation | highway=bus_stop | amenity=bus_stop | 
+highway=busstop | amenity=busstop ) & (name=* |ref=* |operator=*)) {set name='${name} ${operator} ${ref}' | '${name} ${operator}' | '${name} ${ref}' | '${operator} ${ref}' | '${name} ' | '${operator}' | '${ref}'}
+
+addr:housename=* & name!=* {set name='${addr:housename}'}
+addr:housenumber=* {set name= '${name} (${addr:housenumber})' | '${addr:housenumber}' }
+
+opening_hours=* {set addr:city='${addr:city} open ${opening_hours}' | 'open ${opening_hours}'}
+
+# addr:city=* {add addr:housenumber=""; add addr:street=""}
+
+
+
+# Remove access rights for motorcars/motorcycles:
+motorcar=no | motorcar=private {delete motorcar}
+motorcycle=no | motorcycle=private {delete motorcycle}
+hgv=no | hgv=private {delete hgv}
+psv=no | psv=private {delete psv}
+taxi=no | taxi=private {delete taxi}
+emergency=no | emergency=private {delete emergency}
+delivery=no | delivery=private {delete delivery}
+goods=no | goods=private {delete goods}
+
+# Delete Access rights:
+motorcar=delivery | hgv=delivery | psv=delivery | taxi=delivery | emergency=delivery | delivery=delivery | goods=delivery | motorcar=destination | hgv=destination | psv=destination | taxi=destination | emergency=destination | destination=destination | goods=destination | motorcar=forestry | hgv=forestry | psv=forestry | taxi=forestry | emergency=forestry | forestry=forestry | goods=forestry | motorcar=permissive | hgv=permissive | psv=permissive | taxi=permissive | emergency=permissive | permissive=permissive | goods=permissive {set access=yes; set motorcar=yes; set motorcycle=yes; set bicycle=yes; set foot=yes; set taxi=yes; set emergency=yes; set delivery=yes; set goods=yes; set foot=yes; set bicycle=yes }
+
+access=no {set access=yes; set motorcar=yes; set motorcycle=yes; set bicycle=yes; set foot=yes; set taxi=yes; set emergency=yes; set delivery=yes; set goods=yes; set foot=yes; set bicycle=yes }
+ 
+
+# Cities
+(place=* & name!=* & place_name=* ) {set name='${place_name}'}
+(place=* & name!=* & placename=*  ) {set name='${placename}' }
+
+(place=capitol | place=capital)				   & name=*  {set cityxx=yes} [0x0100 resolution 14 continue with_actions ]
+place=city & population > 699999 & cityxx!=yes & name=*  {set cityxx=yes} [0x0200 resolution 14 continue with_actions ]
+place=city & population > 499999 & cityxx!=yes & name=*  {set cityxx=yes} [0x0300 resolution 14 continue with_actions ]
+place=city & population > 299999 & cityxx!=yes & name=*  {set cityxx=yes} [0x0400 resolution 16 continue with_actions ]
+place=city & population > 199999 & cityxx!=yes & name=*  {set cityxx=yes} [0x0500 resolution 16 continue with_actions ]
+place=city & population >  99999 & cityxx!=yes & name=*  {set cityxx=yes} [0x0600 resolution 17 continue with_actions ]
+place=city & population >  49999 & cityxx!=yes & name=*  {set cityxx=yes} [0x0700 resolution 17 continue with_actions ]
+place=city & population >   9999 & cityxx!=yes & name=*  {set cityxx=yes} [0x0800 resolution 18 continue with_actions ]
+place=city & population >	   0 & cityxx!=yes & name=*  {set cityxx=yes} [0x0800 resolution 18 continue with_actions ]
+place=city 						 & cityxx!=yes & name=*  {set cityxx=yes} [0x0700 resolution 18 continue with_actions ]
+
+place=town   & population >  49999 & cityxx!=yes  & name=* {set cityxx=yes} [0x0600 resolution 18 continue with_actions ]
+place=town   & population >  19999 & cityxx!=yes  & name=* {set cityxx=yes} [0x0700 resolution 18 continue with_actions ]
+place=town   & population >   9999 & cityxx!=yes  & name=* {set cityxx=yes} [0x0800 resolution 19 continue with_actions ]
+place=town   & population >   4999 & cityxx!=yes  & name=* {set cityxx=yes} [0x0900 resolution 19 continue with_actions ]
+place=town   & population >    999 & cityxx!=yes  & name=* {set cityxx=yes} [0x0a00 resolution 19 continue with_actions ]
+place=town   & population >		 0 & cityxx!=yes  & name=* {set cityxx=yes} [0x0b00 resolution 20 continue with_actions ]
+place=town 						   & cityxx!=yes  & name=* {set cityxx=yes} [0x0800 resolution 19 continue with_actions ]
+
+place=village & population >  20000	 & cityxx!=yes  & name=* {set cityxx=yes} [0x0a00 resolution 19 continue with_actions ]
+place=village & population >   4000	 & cityxx!=yes  & name=* {set cityxx=yes} [0x0b00 resolution 19 continue with_actions ]
+place=village & population >   1500	 & cityxx!=yes  & name=* {set cityxx=yes} [0x0b00 resolution 20 continue with_actions ]
+place=village & population >      0	 & cityxx!=yes  & name=* {set cityxx=yes} [0x0d00 resolution 21 continue with_actions ]
+place=village 						 & cityxx!=yes  & name=* {set cityxx=yes} [0x0b00 resolution 20 continue with_actions ]
+
+place=island & population > 50000	 & cityxx!=yes  & name=* {set cityxx=yes} [0x0700 resolution 18 continue with_actions ]
+place=island 						 & cityxx!=yes  & name=* {set cityxx=yes} [0x0800 resolution 19 continue with_actions ]
+place=islet	& population >    1999	 & cityxx!=yes  & name=* {set cityxx=yes} [0x0900 resolution 20 continue with_actions ]
+place=islet							 & cityxx!=yes  & name=* {set cityxx=yes} [0x0d00 resolution 22 continue with_actions ]
+place=island | place=islet 											[0x650c resolution 24 continue] # for people used to it (water features).
+
+place=hamlet  & population >   1999	 & cityxx!=yes  & name=* {set cityxx=yes} [0x0a00 resolution 20 continue with_actions ]
+place=hamlet  & population >    699	 & cityxx!=yes  & name=* {set cityxx=yes} [0x0b00 resolution 21 continue with_actions ]
+place=hamlet  & population >    100	 & cityxx!=yes  & name=* {set cityxx=yes} [0x0c00 resolution 21 continue with_actions ]
+place=hamlet  & population >      0	 & cityxx!=yes  & name=* {set cityxx=yes} [0x0d00 resolution 22 continue with_actions ]
+place=hamlet  						 & cityxx!=yes  & name=* {set cityxx=yes} [0x0c00 resolution 21 continue with_actions ]
+
+( place=municipality | place=district ) & population >  49999  & cityxx!=yes  & name=* {set cityxx=yes} [0x0b00 resolution 20 continue with_actions ]
+( place=municipality | place=district ) & population >  19999  & cityxx!=yes  & name=* {set cityxx=yes} [0x0c00 resolution 21 continue with_actions ]
+( place=municipality | place=district ) & population >  4999   & cityxx!=yes  & name=* {set cityxx=yes} [0x0d00 resolution 21 continue with_actions ]
+( place=municipality | place=district ) & population >  1	   & cityxx!=yes  & name=* {set cityxx=yes} [0x0e00 resolution 22 continue with_actions ]
+place=municipality | place=district							   & cityxx!=yes  & name=* {set cityxx=yes} [0x0d00 resolution 21 continue with_actions ]
+
+place=suburb & population >  49999   & cityxx!=yes  & name=* {set cityxx=yes} [0x0b00 resolution 20 continue with_actions ]
+place=suburb & population >  19999   & cityxx!=yes  & name=* {set cityxx=yes} [0x0c00 resolution 21 continue with_actions ]
+place=suburb & population >   4999   & cityxx!=yes  & name=* {set cityxx=yes} [0x0d00 resolution 21 continue with_actions ]
+place=suburb & population >   	 0   & cityxx!=yes  & name=* {set cityxx=yes} [0x0e00 resolution 22 continue with_actions ]
+place=suburb                         & cityxx!=yes  & name=* {set cityxx=yes} [0x0d00 resolution 21 continue with_actions ]
+
+(place=locality | place=bay | place=sea) & cityxx!=yes  & name=* {set cityxx=yes} [0x1100 resolution 24 continue with_actions ]
+
+ 								
+name:de=* & cityxx=yes  	{set name='${name:de}' } 	[0x0900 resolution 24 continue]
+name:loc=* & cityxx=yes  	{set name='${name:loc}' } 	[0x0900 resolution 24 continue]
+name:en=* & cityxx=yes  	{set name='${name:en}' } 	[0x0900 resolution 24 continue]
+name:int=* & cityxx=yes  	{set name='${name:int}' } 	[0x0900 resolution 24 continue]
+
+
+
+rcn_ref=* & rcn_ref > 99 {set name='${rcn_ref}'} [0x1010b resolution 21-21 continue]
+rcn_ref=* & rcn_ref > 99 {set name='${rcn_ref}'} [0x1010a resolution 22 continue]
+rcn_ref=* & rcn_ref < 100 {set name='${rcn_ref}'} [0x1010b resolution 21-21 continue]
+(rcn_ref=* & !(rcn_ref <100 | rcn_ref >99)) {set name='${rcn_ref}'} [0x1010b resolution 22 continue]
+
+rcn_ref=0 	{set name='${rcn_ref}' } [0x10110 resolution 22 continue]
+rcn_ref=1	{set name='${rcn_ref}' } [0x10111 resolution 22 continue]
+rcn_ref=2	{set name='${rcn_ref}' } [0x10112 resolution 22 continue]
+rcn_ref=3	{set name='${rcn_ref}' } [0x10113 resolution 22 continue]
+rcn_ref=4	{set name='${rcn_ref}' } [0x10114 resolution 22 continue]
+rcn_ref=5	{set name='${rcn_ref}' } [0x10115 resolution 22 continue]
+rcn_ref=6	{set name='${rcn_ref}' } [0x10116 resolution 22 continue]
+rcn_ref=7	{set name='${rcn_ref}' } [0x10117 resolution 22 continue]
+rcn_ref=8	{set name='${rcn_ref}' } [0x10118 resolution 22 continue]
+rcn_ref=9	{set name='${rcn_ref}' } [0x10119 resolution 22 continue]
+
+# rcn_ref=0 {set name='${rcn_ref}' } [0x19610 resolution 21-21 continue]
+# rcn_ref=1	{set name='${rcn_ref}' } [0x19611 resolution 21-21 continue]
+# rcn_ref=2	{set name='${rcn_ref}' } [0x19612 resolution 21-21 continue]
+# rcn_ref=3	{set name='${rcn_ref}' } [0x19613 resolution 21-21 continue]
+# rcn_ref=4	{set name='${rcn_ref}' } [0x19614 resolution 21-21 continue]
+# rcn_ref=5	{set name='${rcn_ref}' } [0x19615 resolution 21-21 continue]
+# rcn_ref=6	{set name='${rcn_ref}' } [0x19616 resolution 21-21 continue]
+# rcn_ref=7	{set name='${rcn_ref}' } [0x19617 resolution 21-21 continue]
+# rcn_ref=8	{set name='${rcn_ref}' } [0x19618 resolution 21-21 continue]
+# rcn_ref=9	{set name='${rcn_ref}' } [0x19619 resolution 21-21 continue]
+
+rcn_ref=* & rcn_ref > 89 & rcn_ref < 100 {set name= '${rcn_ref}'} [0x10109 resolution 22 continue]
+rcn_ref=* & rcn_ref > 79 & rcn_ref < 90 {set name= '${rcn_ref}' } [0x10108 resolution 22 continue]
+rcn_ref=* & rcn_ref > 69 & rcn_ref < 80 {set name= '${rcn_ref}' } [0x10107 resolution 22 continue]
+rcn_ref=* & rcn_ref > 59 & rcn_ref < 70 {set name= '${rcn_ref}' } [0x10106 resolution 22 continue]
+rcn_ref=* & rcn_ref > 49 & rcn_ref < 60 {set name= '${rcn_ref}' } [0x10105 resolution 22 continue]
+rcn_ref=* & rcn_ref > 39 & rcn_ref < 50 {set name= '${rcn_ref}' } [0x10104 resolution 22 continue]
+rcn_ref=* & rcn_ref > 29 & rcn_ref < 40 {set name= '${rcn_ref}' } [0x10103 resolution 22 continue]
+rcn_ref=* & rcn_ref > 19 & rcn_ref < 30 {set name= '${rcn_ref}' } [0x10102 resolution 22 continue]
+rcn_ref=* & rcn_ref > 9  & rcn_ref < 20 {set name= '${rcn_ref}' } [0x10101 resolution 22 continue]
+
+rcn_ref=10 | rcn_ref=20 | rcn_ref=30 | rcn_ref=40 | rcn_ref=50 | rcn_ref=60 | rcn_ref=70 | rcn_ref=80 | rcn_ref=90  {set name= '${rcn_ref}'} [0x18600 resolution 22 continue]
+rcn_ref=11 | rcn_ref=21 | rcn_ref=31 | rcn_ref=41 | rcn_ref=51 | rcn_ref=61 | rcn_ref=71 | rcn_ref=81 | rcn_ref=91  {set name= '${rcn_ref}'} [0x18601 resolution 22 continue]
+rcn_ref=12 | rcn_ref=22 | rcn_ref=32 | rcn_ref=42 | rcn_ref=52 | rcn_ref=62 | rcn_ref=72 | rcn_ref=82 | rcn_ref=92  {set name= '${rcn_ref}'} [0x18602 resolution 22 continue]
+rcn_ref=13 | rcn_ref=23 | rcn_ref=33 | rcn_ref=43 | rcn_ref=53 | rcn_ref=63 | rcn_ref=73 | rcn_ref=83 | rcn_ref=93  {set name= '${rcn_ref}'} [0x18603 resolution 22 continue]
+rcn_ref=14 | rcn_ref=24 | rcn_ref=34 | rcn_ref=44 | rcn_ref=54 | rcn_ref=64 | rcn_ref=74 | rcn_ref=84 | rcn_ref=94  {set name= '${rcn_ref}'} [0x18604 resolution 22 continue]
+rcn_ref=15 | rcn_ref=25 | rcn_ref=35 | rcn_ref=45 | rcn_ref=55 | rcn_ref=65 | rcn_ref=75 | rcn_ref=85 | rcn_ref=95  {set name= '${rcn_ref}'} [0x18605 resolution 22 continue]
+rcn_ref=16 | rcn_ref=26 | rcn_ref=36 | rcn_ref=46 | rcn_ref=56 | rcn_ref=66 | rcn_ref=76 | rcn_ref=86 | rcn_ref=96  {set name= '${rcn_ref}'} [0x18606 resolution 22 continue]
+rcn_ref=17 | rcn_ref=27 | rcn_ref=37 | rcn_ref=47 | rcn_ref=57 | rcn_ref=67 | rcn_ref=77 | rcn_ref=87 | rcn_ref=97  {set name= '${rcn_ref}'} [0x18607 resolution 22 continue]
+rcn_ref=18 | rcn_ref=28 | rcn_ref=38 | rcn_ref=48 | rcn_ref=58 | rcn_ref=68 | rcn_ref=78 | rcn_ref=88 | rcn_ref=98  {set name= '${rcn_ref}'} [0x18608 resolution 22 continue]
+rcn_ref=19 | rcn_ref=29 | rcn_ref=39 | rcn_ref=49 | rcn_ref=59 | rcn_ref=69 | rcn_ref=79 | rcn_ref=89 | rcn_ref=99  {set name= '${rcn_ref}'} [0x18609 resolution 22 continue]
+
+
+# rcn_ref=* & rcn_ref > 89 & rcn_ref < 100 {set mkgmap:rcn_ref='${rcn_ref}'; set name= '${rcn_ref}'} [0x19609 resolution 21-22 continue with_actions]
+# rcn_ref=* & rcn_ref > 79 & rcn_ref < 90 {set mkgmap:rcn_ref='${rcn_ref}'; set name= '${rcn_ref}' } [0x19608 resolution 21-22 continue with_actions]
+# rcn_ref=* & rcn_ref > 69 & rcn_ref < 80 {set mkgmap:rcn_ref='${rcn_ref}'; set name= '${rcn_ref}' } [0x19607 resolution 21-22 continue with_actions]
+# rcn_ref=* & rcn_ref > 59 & rcn_ref < 70 {set mkgmap:rcn_ref='${rcn_ref}'; set name= '${rcn_ref}' } [0x19606 resolution 21-22 continue with_actions]
+# rcn_ref=* & rcn_ref > 49 & rcn_ref < 60 {set mkgmap:rcn_ref='${rcn_ref}'; set name= '${rcn_ref}' } [0x19605 resolution 21-22 continue with_actions]
+# rcn_ref=* & rcn_ref > 39 & rcn_ref < 50 {set mkgmap:rcn_ref='${rcn_ref}'; set name= '${rcn_ref}' } [0x19604 resolution 21-22 continue with_actions]
+# rcn_ref=* & rcn_ref > 29 & rcn_ref < 40 {set mkgmap:rcn_ref='${rcn_ref}'; set name= '${rcn_ref}' } [0x19603 resolution 21-22 continue with_actions]
+# rcn_ref=* & rcn_ref > 19 & rcn_ref < 30 {set mkgmap:rcn_ref='${rcn_ref}'; set name= '${rcn_ref}' } [0x19602 resolution 21-22 continue with_actions]
+# rcn_ref=* & rcn_ref > 9  & rcn_ref < 20 {set mkgmap:rcn_ref='${rcn_ref}'; set name= '${rcn_ref}' } [0x19601 resolution 21-22 continue with_actions]
+
+(shop=* | amenity=* | building=* | cuisine=* | natural=* | tourism=*) & name=* & operator=*  {set name='${name} ${operator}'; delete operator }
+operator=* & name!=*  {set name='${operator}'; delete operator}
+
+
+# MTB:scale
+(mtb:scale=3 | mtb:scale=4 | mtb:scale=5 | mtb:scale=6 | mtb:scale=7 ) & mkgmap:line2poi!=true {set name='${name} M${mtb:scale}'} [0x1010c resolution 24 continue]
+(mtb:scale=3 | mtb:scale=4 | mtb:scale=5 | mtb:scale=6 | mtb:scale=7 ) & mkgmap:line2poi=true {set name='${name} M${mtb:scale}'} [0x1010c resolution 24 continue]
+
+mtb:scale=3 & mkgmap:line2poi!=true [0x11608 resolution 22 continue]
+mtb:scale=4 & mkgmap:line2poi!=true [0x11609 resolution 22 continue]
+mtb:scale=5 & mkgmap:line2poi!=true [0x1160a resolution 22 continue]
+mtb:scale=6 & mkgmap:line2poi!=true [0x1160b resolution 22 continue]
+mtb:scale=7 & mkgmap:line2poi!=true [0x1160c resolution 22 continue]
+
+# POIS that are used with continue command.
+amenity=WLAN 	& wlanmatch!=*		{set wlanmatch=no}						[0x2f12 resolution 23 continue with_actions]
+amenity=Wlan 	& wlanmatch!=*		{set wlanmatch=no}						[0x2f12 resolution 23 continue with_actions]
+amenity=wlan 	& wlanmatch!=*		{set wlanmatch=no}						[0x2f12 resolution 23 continue with_actions]
+amenity=wifi	& wlanmatch!=*		{set wlanmatch=no}						[0x2f12 resolution 23 continue with_actions]
+
+internet_access=true | internetaccess=true | internetaccess=yes {set internet_access=yes}
+internet_access=yes & wlanmatch!=* {set name='Internet ${name}' | 'Internet'; set wlanmatch=no } [0x2f12 resolution 24 continue]
+internet_access=* & wlanmatch!=* & amenity!=wifi & internet_access!=no & internet_access!=yes {set name='Internet(${internet_access}) ${name|def:}' } [0x2f12 resolution 24 continue]
+
+amenity=bicycle_rental 	{set name='${name} ${spaces} ${network}' | '${name} ${spaces}' | '${name} ${network}' | '${spaces} ${network}' | '${name}' | '${network}' } [0x11002 resolution 24 continue]
+amenity=bicycle_rental 	{set name='${name} ${spaces} ${network}' | '${name} ${spaces}' | '${name} ${network}' | '${spaces} ${network}' | '${name}' | '${network}' } [0x1960b resolution 22-24 continue]
+
+( amenity=arts_centre | amenity=arts_center ) & name!=* & mkgmap:area2poi=true {delete amenity}
+amenity=arts_centre | amenity=arts_center									[0x2f14 resolution 24 continue]
+
+amenity=bank | amenity='bank;atm' | amenity='bank; atm' | amenity='atm;bank' {set name='Bank ${name}' | 'Bank' }	[0x2f06 resolution 23 continue]
+amenity=atm 		{set name='ATM ${name}' | 'ATM' }		[0x2f06 resolution 24 continue]
+amenity=cashpoint 	{set name='ATM ${name}' | 'ATM' }		[0x2f06 resolution 24 continue]
+amenity=cash_point 	{set name='ATM ${name}' | 'ATM' }		[0x2f06 resolution 24 continue]
+amenity=bureau_de_change { name '${operator} ${name} FX' | '${operator} FX' | '${name} FX' } [0x2f06 resolution 24]
+
+amenity=casino 											[0x2d04 resolution 24 continue]
+amenity=cinema											[0x2d03 resolution 24 continue]
+
+( amenity=college | amenity=school | amenity=kindergarten | amenity=university ) & name!=* & mkgmap:area2poi=true {delete amenity}
+amenity=college & mkgmap:area2poi!=true	& name=*										[0x10d05 resolution 24 continue]
+amenity=school & mkgmap:area2poi!=true	& name=*										[0x2c05 resolution 24 continue]
+amenity=kindergarten & mkgmap:area2poi!=true	& name=*								[0x2c05 resolution 24 continue]
+amenity=university 						& name=*										[0x10d05 resolution 24 continue]
+((amenity=townhall | amenity=town_hall)	& mkgmap:area2poi!=true ) | (amenity=cityhall | amenity=city_hall)		[0x11103 resolution 24 continue] # now found as city hall
+amenity=library 																		[0x2c03 resolution 24 continue]
+# amenity=courthouse 	& mkgmap:area2poi!=true											[0x3004 resolution 24 continue]
+( amenity=courthouse ) & name!=* & mkgmap:area2poi=true {delete amenity}
+amenity=courthouse 																		[0x3004 resolution 24 continue]
+( amenity=concert_hall | amenity=concerthall ) & name!=* & mkgmap:area2poi=true {delete amenity}
+amenity=concert_hall 																	[0x2c09 resolution 24 continue]
+amenity=concerthall 																	[0x2c09 resolution 24 continue]
+( amenity=conference_centre | amenity=conference_center | amenity=convention_centre | amenity=convention_center | amenity=community_centre | amenity=community_center ) & name!=* & mkgmap:area2poi=true {delete amenity}
+( amenity=conference_centre | amenity=conference_center | amenity=convention_centre | amenity=convention_center ) {set amenity=conference_centre}
+amenity=conference_centre & mkgmap:area2poi!=true & name=*								[0x3005 resolution 24 continue]
+(amenity=community_centre | amenity=communitycentre )	& mkgmap:area2poi!=true			[0x3005 resolution 24 continue]
+( amenity=grave_yard | amenity=graveyard ) 	& mkgmap:area2poi=true {delete amenity}
+( amenity=grave_yard | amenity=graveyard)												[0x6403 resolution 24 continue]
+( amenity=fire_station | amenity=firestation ) & mkgmap:area2poi!=true					[0x3008 resolution 23 continue]
+
+amenity=mountain_rescue {set name='mtn_rescue ${name}' | 'mtn_rescue' }		[0x3002 resolution 24 continue] # found under other:social services
+amenity=mountain_rescue {set name='mtn_rescue ${name}' | 'mtn_rescue' }		[0x1860a resolution 21-24 continue]
+
+amenity=doctors | healthcare=doctors | amenity=doctor | healthcare=doctor [0x11014 resolution 24 continue]
+amenity=dentist | healthcare=dentist & !(amenity=doctors | healthcare=doctors | amenity=doctor | healthcare=doctor)	[0x4b01 resolution 24 continue]
+amenity=veterinary 	| healthcare=veterinary									[0x6408 resolution 24 continue]
+amenity=police 																[0x3001 resolution 24 continue]
+amenity=police_station 														[0x3001 resolution 24 continue]
+amenity=post_office {set name='post_office ${name}' | 'post_office' }		[0x2f05 resolution 24 continue]
+amenity=post_box {set name='post_box ${name}' | 'post_box' }				[0x640f resolution 24 continue]
+amenity=public_building & mkgmap:area2poi!=true	 & name=*					[0x3000 resolution 24 continue]
+amenity=embassy & country=* {set name='${country} ${name|def:}' }			[0x3000 resolution 24 continue]
+amenity=embassy & country!=* & name=* 										[0x3000 resolution 24 continue]
+# 0x3000 is found under government building
+# 0x3007 is found as government office
+amenity=pharmacy | shop=pharmacy | amenity=parmacy | shop=parmacy	{set name='pharmacy ${name}' | 'Pharmacy'; set shopmatch=no}						[0x2e05 resolution 24 continue]
+# amenity=recycling 														[0x1171d resolution 24 continue]
+
+
+amenity=emergency_phone | highway=emergency_access_point | emergency_phone=yes	{set name='emergency phone ${name}'|'emergency phone'} [0x6411 resolution 24 continue]
+amenity=telephone {set name='phone ${name}'|'phone'}						[0x6411 resolution 24 continue]
+amenity=theatre | amenity=theater											[0x2d01 resolution 24 continue]
+amenity=toilet {set amenity=toilets}
+amenity=toilets & access!=private & shower!=yes {set name='toilets ${name}'|'toilets'} 															  [0x10903 resolution 24 continue]
+(amenity=restroom | amenity=shower | amenity=showers | (amenity=toilets & shower=yes)) & access!=private {set name='restroom ${name}'|'restroom'} [0x10903 resolution 24 continue]
+(amenity=toilets | amenity=toilet) & access!=private  {set name='toilets ${name}'|'toilets'} 													  [0x4e00 resolution 24 continue]
+(amenity=restroom | amenity=shower | amenity=showers | (amenity=toilets & shower=yes)) & access!=private {set name='restroom ${name}'|'restroom'} [0x4e00 resolution 24 continue]
+
+
+aerialway=station 				{set name='$gondola ${name}' | 'Gondola' } 	[0x11614 resolution 22 continue]
+aerialway=station 				{set name='$gondola ${name}' | 'Gondola' } 	[0x1101f resolution 24 continue]
+
+amenity=bbq    {set name='bbq ${name}' | 'bbq' }  												[0x11914 resolution 22-24 continue]
+(tourism=picnic_site | tourism=picnic) & amenity!=bbq {set name='picnic ${name}' | 'picnic' }	[0x11914 resolution 22-24 continue]
+amenity=bbq    {set name='bbq ${name}' | 'bbq' }  												[0x10d06 resolution 24 continue]
+(tourism=picnic_site | tourism=picnic) & amenity!=bbq {set name='picnic ${name}' | 'picnic' }	[0x10d06 resolution 24 continue]
+
+# Essen und Trinken
+man_made=water_well | man_made=waterwell | amenity=water_well | amenity=waterwell | amenity=drinkingwater {set amenity=drinking_water}
+amenity=drinking_water 	{set name='${name} water' | 'drinking water'; set nospring=yes; add mkgmap:road-class ='+1' }		[0x10903 resolution 24 continue with_actions]
+amenity=drinking_water 																										[0x11506 resolution 23-24 continue]
+amenity=drinking_water 																										[0x11508 resolution 22-22 continue]
+
+
+amenity=watering_place 	{set name='wplace ${name}' | 'watering place'; set nospring=yes; add mkgmap:road-class ='+1' }		[0x10903 resolution 24 continue with_actions]
+amenity=watering_place 																										[0x1150a resolution 23-24 continue]
+amenity=watering_place 																										[0x11508 resolution 22-22 continue]
+
+waterway=water_point & nospring!=yes	{set name='wpoint ${name}' | 'water point'; set nospring=yes; set double=yes; add mkgmap:road-class ='+1' } 	[0x10903 resolution 24 continue with_actions]
+waterway=water_point & amenity!=drinking_water & amenity!=watering_place {set name='wpoint ${name}' | 'water point'}									[0x1161c resolution 23-24 continue]
+waterway=water_point & amenity!=drinking_water & amenity!=watering_place {set name='wpoint ${name}' | 'water point'}									[0x11508 resolution 22-22 continue]
+
+# amenity=drinking_water | amenity=watering_place | waterway=water_point														[0x10903 resolution 24 continue] # found as Facilities
+
+natural=waterfall {set waterway=waterfall}
+waterway=waterfall [0x6508 resolution 22 continue]
+
+leisure=hot_spring | amenity=spring & hot=yes | natural=spring & hot=yes | amenity=quelle & hot=yes | amenity=hot_spring [0x2c0c resolution 22]
+
+amenity=quelle & nospring!=yes	{set nospring=yes; set nospring1=yes } 		[0x6500 resolution 22 continue with_actions]
+natural=quelle & nospring!=yes 	{set nospring=yes; set nospring1=yes }		[0x6500 resolution 22 continue with_actions]
+natural=spring & nospring!=yes 	{set nospring=yes; set nospring1=yes }		[0x6500 resolution 22 continue with_actions]
+amenity=spring & nospring!=yes 	{set nospring=yes; set nospring1=yes }		[0x6500 resolution 22 continue with_actions]
+# amenity=fountain & nospring!=yes {set nospring=yes; set nospring1=yes }	[0x6500 resolution 23 continue with_actions]
+nospring1=yes & ( water=potable | drinking_water=yes ) {set name='potable spring ${name}' | 'potable spring'} [0x10903 resolution 24 continue]
+
+
+#According to the http://wiki.openstreetmap.org/wiki/Proposed_features/wilderness_mountain_buildings
+tourism=alpine_hut & name!=* & heating!=* & shower!=* & mattres!=* & toilets!=* & opening_hours!=* & capacity!=* & operator!=* {set name='${name} not_an_alpine_hut' | 'not_an_alpine_hut' } [0x11603 resolution 24]
+(tourism=alpine_hut | amenity=alpine_hut | building=alpine_hut) & (name=* | heating=* | shower=* | mattres=* | toilets=* | opening_hours=* | capacity=* | operator=* )	{set name='${name} alpine_hut' | 'alpine_hut' } [0x10c07 resolution 24 continue]
+(tourism=alpine_hut | amenity=alpine_hut | building=alpine_hut)	& (name=* | heating=* | shower=* | mattres=* | toilets=* | opening_hours=* | capacity=* | operator=* )	{set name='${name} alpine_hut' | 'alpine_hut' } [0x11606 resolution 21-24 continue]
+tourism=wilderness_hut | amenity=wilderness_hut | building=wilderness_hut | ( tourism=cabin & ( service=self | (service=* & service!=no) ))	{set name='${name} wilderness_hut' | 'wilderness_hut' } 	[0x2b07 resolution 24 continue]
+tourism=wilderness_hut | amenity=wilderness_hut | building=wilderness_hut | ( tourism=cabin & ( service=self | (service=* & service!=no) ))	{set name='${name} wilderness_hut' | 'wilderness_hut' } 	[0x11602 resolution 22 continue]
+# tourism=basic_hut | amenity=basic_hut | building=basic_hut | tourism=bothy | (tourism=cabin & ( service=no | service!=*))	{set name='${name} basic_hut' | 'basic_hut' } 								[0x2b?? resolution 24 continue]
+tourism=basic_hut | amenity=basic_hut | building=basic_hut | tourism=bothy | (tourism=cabin & ( service=no | service!=*))	{set name='${name} basic_hut' | 'basic_hut' } 								[0x11603 resolution 22 continue]
+tourism=lean_to | amenity=lean_to																							{set name='${name} lean_to' | 'lean_to'}									[0x11601 resolution 23]
+
+# For old compatibility, please don't tag this way anymore
+building=shelter | tourism=shelter	| amenity=shelter 	{set name='${name} shelter' | 'shelter' } 									[0x11601 resolution 23 continue]
+amenity=refuge | tourism=refuge | building=refuge		{set name='${name} refuge' | 'refuge' } 									[0x11603 resolution 22 continue]
+amenity=refuge | tourism=refuge | building=refuge		{set name='${name} refuge' | 'refuge' } 									[0x2b04 resolution 24 continue]
+
+
+
+
+
+############################# FOOOOD and Drinks ################
+cusine=* & cuisine!=* {set cuisine='${cusine}'}
+amenity=heuriger 	| cuisine=heuriger | amenity=winery | cuisine=buschenschank	[0x2c0a resolution 24 continue]
+
+amenity=pub & cuisine=*			{set name='${name} ${cuisine} Pub'|'Pub ${cuisine}'; set cuisinematch=no; delete cuisine} 					[0x2d02 resolution 24 continue with_actions]
+amenity=biergarten & cuisine=*	{set name='${name} ${cuisine} Biergarten' | 'Biergarten ${cuisine}'; set cuisinematch=no; delete cuisine} 	[0x10b00 resolution 24 continue with_actions]
+
+cuisine=american | cuisine=america							{set cuisinematch=no} [0x2a01 resolution 24 continue with_actions]
+cuisine=asian | cuisine=asia								{set cuisinematch=no} [0x2a02 resolution 24 continue with_actions]
+cuisine=japanese | cuisine=japan | cuisine=sushi | cuisine=kyo_ryouri | cuisine=okinawa_ryori  		{set cuisinematch=no} [0x2a02 resolution 24 continue with_actions]
+cuisine=korean | cuisine=vietnamese							{set cuisinematch=no} [0x2a02 resolution 24 continue with_actions]
+cuisine=thai | cuisine=thailand	| cuisine=malaysian | cuisine=malysia | cuisine=indonesian | cuisine=philipine	{set cuisinematch=no} [0x2a02 resolution 24 continue with_actions]
+cuisine=barbecue | cuisine=bbq								{set cuisinematch=no} [0x2a03 resolution 24 continue with_actions]
+cuisine=grill		{set cuisinematch=no} [0x2a03 resolution 24 continue with_actions]
+cuisine=chinese | cuisine=sichuan | cuisine=kantoneese | cuisine=hunan | cuisine=cantoneese | cuisine=lao | cuisine=shandong	{set cuisinematch=no} [0x2a04 resolution 24 continue with_actions]
+cuisine=greek | cuisine=greece | cuisine=griechisch	| cuisine= bougatsa {set cuisinematch=no} [0x2a05 resolution 24 continue with_actions]
+cuisine=deli 												{set cuisinematch=no} [0x2a05 resolution 24 continue with_actions]
+cuisine=international | cuisine=malagasy | cuisine=capixaba | cuisine=moroccan | cuisine=caribbean |cuisine=baiana | cuisine=ethiopian | cuisine=oriental |cuisine=gaucho | cuisine=mineira | cuisine=african | cuisine=arabic |cuisine=persian | cuisine=arab | cuisine=balkan {set cuisinematch=no} [0x2a06 resolution 24 continue with_actions]
+cuisine=italian | cuisine=italia | cuisine=italy | cuisine='italian;pizza' | cuisine=croatian		{set cuisinematch=no} [0x2a08 resolution 24 continue with_actions]
+cuisine=pasta 												{set cuisinematch=no} [0x2a08 resolution 24 continue with_actions]
+cuisine=turkish												{set cuisinematch=no} [0x2a00 resolution 24 continue with_actions]
+cuisine=mexican | cuisine=spanish | cuisine=mexico | cuisine=spain | cuisine=tapas | cuisine=argentinian | cuisine=brazilian	{set cuisinematch=no} [0x2a09 resolution 24 continue with_actions]
+(cuisine=sea_food | cuisine=seafood | cuisine=fish)			{set cuisinematch=no} [0x2a0b resolution 24 continue with_actions]
+(cuisine=steak_house | cuisine=steak | cuisine=american)	{set cuisinematch=no} [0x2a0c resolution 24 continue with_actions]
+cuisine=steak 												{set cuisinematch=no} [0x2a0c resolution 24 continue with_actions]
+cuisine=donut 												{set cuisinematch=no} [0x2a01 resolution 24 continue with_actions]
+(cuisine=bagel | cuisine=bagle) 							{set cuisinematch=no} [0x2a0d resolution 24 continue with_actions]
+cuisine=diner												{set cuisinematch=no} [0x2a0e resolution 24 continue with_actions]
+cuisine=french | cuisine=france | cuisine=francais 			{set cuisinematch=no} [0x2a0f resolution 24 continue with_actions]
+cuisine=crepe | cuisine=pancake 							{set cuisinematch=no} [0x2a0f resolution 24 continue with_actions]
+cuisine=german | cuisine=deutsch | cuisine=germany | cuisine=deutschland | cuisine='german;regional'		{set cuisinematch=no} [0x2a10 resolution 24 continue with_actions]
+cuisine=austrian 	| cuisine=oesterreich					{set cuisinematch=no} [0x2a10 resolution 24 continue with_actions]
+cuisine=bavarian | cuisine=bayrisch | cuisine=boarisch 	| cusine=swabian | cuisine=schwaebisch	{set cuisinematch=no} [0x2a10 resolution 24 continue with_actions]
+cuisine=british  | cuisine=english | cuisine=irish | cuisine=fish_and_chips	| cuisine=fishandchips	{set cuisinematch=no} [0x2a11 resolution 24 continue with_actions]
+cuisine=fish_and_chips | cuisine=friture  					{set cuisinematch=no} [0x2a11 resolution 24 continue with_actions]
+cuisine=vegan 												{set cuisinematch=no} [0x2a12 resolution 24 continue with_actions]
+cuisine=speciality 											{set cuisinematch=no} [0x2a12 resolution 24 continue with_actions]
+cuisine=vegetarian 											{set cuisinematch=no} [0x2a13 resolution 24 continue with_actions]
+cuisine=regional | cuisine=western							{set cuisinematch=no} [0x2a14 resolution 24 continue with_actions]
+cuisine=burger 	| cuisine=hamburgers						{set cuisinematch=no} [0x2a07 resolution 24 continue with_actions]
+cuisine=chicken 											{set cuisinematch=no} [0x2a07 resolution 24 continue with_actions]
+cuisine=ice_cream | cuisine=icecream | amenity=icecream | amenity=ice_cream | shop=ice_cream  	{set cuisinematch=no} [0x2a1c resolution 24 continue with_actions]
+cuisine=curry | cuisine=indian | cuisine=pakistani | cuisine=lebanese | cuisine=ramen		{set cuisinematch=no} [0x2a06 resolution 24 continue with_actions]
+(cuisine=kebap | cuisine=doener | cuisine='kebap;pizza' | cuisine=kebab | cuisine='pizza;kebap') 	{set name='${name} ${cuisine} '|'${cuisine}'; set cuisinematch=no} [0x2a07 resolution 24 continue with_actions]
+(cuisine=fast_food | cuisine=noodle) 						{set cuisinematch=no} [0x2a07 resolution 24 continue with_actions]
+(cuisine=sausage | cuisine=wuerstel) 						{set cuisinematch=no} [0x2a07 resolution 24 continue with_actions]
+cuisine=pie 												{set cuisinematch=no} [0x2a07 resolution 24 continue with_actions]
+cuisine=sandwich 											{set cuisinematch=no} [0x2a07 resolution 24 continue with_actions]
+cuisine=savory_pancakes 									{set cuisinematch=no} [0x2a0f resolution 24 continue with_actions]
+(( amenity=restaurant | amenity=fast_food ) & cuisine ~ '.*pizza.*' ) {set cuisinematch=no} [0x2a0a resolution 24 continue with_actions]
+
+amenity=pub 		& cuisine!=* & cuisinematch!=*	{set name='${name} Pub'|'Pub'; set cuisinematch=no} 				[0x2d02 resolution 24 continue with_actions]
+amenity=biergarten  & cuisine!=* & cuisinematch!=*	{set name='${name} Biergarten' | 'Biergarten'; set cuisinematch=no} [0x10b00 resolution 24 continue with_actions]
+amenity=bar 						{set cuisinematch=no} 									[0x10e02 resolution 24 continue with_actions]
+amenity=nightclub 	{set name='${name} nightclub'; set cuisinematch=no} 					[0x10e02 resolution 24 continue with_actions]
+amenity=night_club 	{set name='${name} nightclub'; set cuisinematch=no} 					[0x10e02 resolution 24 continue with_actions]
+(amenity=cafe | amenity=coffe_shop |cuisine=coffe_shop | cuisine=coffee_shop | cuisine=breakfast | cuisine=cofee_shop | cuisine=cafe) {set name='cafe ${name}' | 'cafe'; set cuisinematch=no} 		[0x2a0e resolution 24 continue with_actions]
+
+cuisine=pizza 												{set cuisinematch=no} [0x2a0a resolution 24 continue with_actions]
+
+# amenity=nightclub 																		[0x2d02 resolution 24 continue with_actions]
+amenity=fast_food 	& cuisinematch!=*				{set cuisinematch=no} 					[0x2a07 resolution 24 continue with_actions]
+amenity=restaurant 	& cuisinematch!=*				{set cuisinematch=no} 					[0x2a00 resolution 24 continue with_actions]
+restaurant=* 		& cuisinematch!=*				{set cuisinematch=no} 					[0x2a00 resolution 24 continue with_actions]
+(amenity=restaurant | amenity=food_court)	& cuisinematch!=*	{set cuisinematch=no} 		[0x2a00 resolution 24 continue with_actions]
+cuisine=* 		& cuisinematch!=*															[0x2a00 resolution 24 continue with_actions]
+# missing amenity=brothel
+
+
+
+# taxi needs to be added somewhere
+
+( natural=peak | natural=summit ) & summit:register=yes {add importance=2}
+( natural=peak | natural=summit ) & ( summit:cross=yes | summitcross=yes | summit:cross=true | summitcross=true | man_made=cross | manmade=cross ){add importance=1}
+( natural=peak | natural=summit ) & website=* & wiki!=* {set wiki=yes}
+( natural=peak | natural=summit ) & relevance=* { add importance='${relevance}'}
+( natural=peak | natural=summit ) & prominence=* {set importance='${prominence}'}
+( natural=peak | natural=summit ) & (importance>4 | importance=international)	{set peakcopy=yes} 	[0x11605 resolution 16-17 continue with_actions]
+( natural=peak | natural=summit ) & importance=4								{set peakcopy=yes} 	[0x11605 resolution 17-18 continue with_actions]
+( natural=peak | natural=summit ) & (importance=3 | importance=national)		{set peakcopy=yes} 	[0x11605 resolution 18-19 continue with_actions]
+( natural=peak | natural=summit ) & (importance=2 | importance=regional)		{set peakcopy=yes} 	[0x11605 resolution 19-20 continue with_actions]
+( natural=peak | natural=summit ) & importance=1								{set peakcopy=yes} 	[0x11605 resolution 20-22 continue with_actions]
+( natural=peak | natural=summit ) & (importance=0 | importance=urban)			{set peakcopy=yes} 	[0x11605 resolution 21-23 continue with_actions]
+
+( natural=peak | natural=summit ) & (importance>4 | importance=international)					 	[0x11517 resolution 18-23 continue]
+( natural=peak | natural=summit ) & importance=4												 	[0x11517 resolution 19-23 continue]
+( natural=peak | natural=summit ) & (importance=3 | importance=national)						 	[0x11517 resolution 20-23 continue]
+( natural=peak | natural=summit ) & (importance=2 | importance=regional)						 	[0x11517 resolution 21-23 continue]
+( natural=peak | natural=summit ) & importance=1												 	[0x11517 resolution 23-23 resolution 23-23 continue]
+# ( natural=peak | natural=summit ) & (importance=0 | importance=urban)							 	[0x11517 resolution 22-23 continue]
+
+
+( natural=peak | natural=summit ) & (importance=-1 | importance=suburban)		{set peakcopy=yes} 	[0x11605 resolution 22-23 continue with_actions]
+( natural=peak | natural=summit ) & (importance=-2	| importance=local)			{set peakcopy=yes} 	[0x11605 resolution 23-23 continue with_actions]
+( natural=peak | natural=summit ) & (importance<-2	| importance=*)	& peakcopy!=yes					{set peakcopy=yes}
+
+( natural=peak | natural=summit ) & ele>4000 & wiki=* 		& peakcopy!=yes	{set peakcopy=yes; set peakcopy1=yes} 	[0x11605 resolution 19-19 continue with_actions]
+( natural=peak | natural=summit ) & wiki=*	& ele<4001		& peakcopy!=yes	{set peakcopy=yes; set peakcopy1=yes} 	[0x11605 resolution 20-20 continue with_actions]
+( natural=peak | natural=summit ) & ele>2000 				& peakcopy!=yes {set peakcopy=yes; set peakcopy1=yes} 	[0x11605 resolution 21-21 continue with_actions]
+( natural=peak | natural=summit ) & ele=*					& peakcopy!=yes {set peakcopy=yes} 						[0x11517 resolution 22-23 continue with_actions]
+( natural=peak | natural=summit ) & ele!=*					& peakcopy!=yes {set peakcopy=yes} 						[0x11605 resolution 22-23 continue with_actions]
+
+( natural=peak | natural=summit ) & ele>4000 & wiki=* 		& peakcopy1=yes					 	[0x11517 resolution 20-23 continue with_actions]
+( natural=peak | natural=summit ) & wiki=*	& ele<4001		& peakcopy1=yes					 	[0x11517 resolution 21-23 continue with_actions]
+( natural=peak | natural=summit ) & ele>2000 				& peakcopy1=yes 				 	[0x11517 resolution 22-23 continue with_actions]
+# ( natural=peak | natural=summit ) & ele=*					& peakcopy1=yes {set peakcopy=yes} 	[0x11517 resolution 22-23 continue with_actions]
+# ( natural=peak | natural=summit ) & ele!=*				& peakcopy1=yes {set peakcopy=yes} 	[0x11517 resolution 22-23 continue with_actions]
+
+( natural=peak | natural=summit ) &  ( mkgmap:area2poi!=true | peakcopy=yes )				   	[0x6616 resolution 24 continue with_actions]
+
+natural=mountain & peakcopy!=yes	& mkgmap:area2poi!=true									   	[0x6615 resolution 24 continue]
+natural=mountain & peakcopy!=yes 	& mkgmap:area2poi!=true										[0x11517 resolution 22-23 continue]
+
+man_made=observatory [0x6415 resolution 22 continue]
+
+mountainpass=true | mountain_pass=true {set mountain_pass=yes}
+(mountainpass=yes | mountain_pass=yes | highway=mountainpass | highway=mountain_pass) & name=* & ele!=*  {set lowrespass2=yes} 							[0x1c01 resolution 24 continue with_actions]
+(mountainpass=yes | mountain_pass=yes | highway=mountainpass | highway=mountain_pass) & name!=* & ele!=* 					  							[0x1c01 resolution 24 continue with_actions]
+(mountainpass=yes | mountain_pass=yes | highway=mountainpass | highway=mountain_pass) & name=* & ele=*   {set lowrespass=yes} 							[0x1c01 resolution 24 continue with_actions]
+(mountainpass=yes | mountain_pass=yes | highway=mountainpass | highway=mountain_pass) & name!=* & lowrespass!=yes & ele>0 {set lowresspass1=yes} 		[0x1c01 resolution 24 continue with_actions]
+(mountainpass=yes | mountain_pass=yes | highway=mountainpass | highway=mountain_pass) & name!=* & ele=* & lowrespass1!=yes 							 	[0x1c01 resolution 24 continue with_actions]
+
+(mountainpass=yes | mountain_pass=yes | highway=mountainpass | highway=mountain_pass)	& lowresspass=yes 								 			[0x11607 resolution 20-21 continue]
+(mountainpass=yes | mountain_pass=yes | highway=mountainpass | highway=mountain_pass)	& lowresspass2=yes 									 		[0x11607 resolution 21-21 continue]
+(mountainpass=yes | mountain_pass=yes | highway=mountainpass | highway=mountain_pass)	& lowresspass=yes { add mkgmap:road-class ='+1' ; set lowresspass3=yes} 			[0x1151f resolution 22-22 continue with_actions]
+(mountainpass=yes | mountain_pass=yes | highway=mountainpass | highway=mountain_pass)	& lowresspass2=yes { add mkgmap:road-class ='+1'; set lowresspass3=yes} 			[0x1151f resolution 22-22 continue with_actions]
+(mountainpass=yes | mountain_pass=yes | highway=mountainpass | highway=mountain_pass) 	& lowresspass!=yes & ele=* { add mkgmap:road-class ='+1' ; set lowresspass3=yes} 	[0x1151f resolution 23-24 continue with_actions]
+(mountainpass=yes | mountain_pass=yes | highway=mountainpass | highway=mountain_pass)	& lowresspass!=yes & ele!=*{ add mkgmap:road-class ='+1' ; set lowresspass3=yes} 	[0x1151f resolution 23-24 continue with_actions]
+
+(natural=col | natural=saddle ) & lowresspass!=yes & lowresspass2!=yes & lowresspass3!=yes & name=* & ele=* [0x11607 resolution 22-22 continue]
+(natural=col | natural=saddle ) & lowresspass!=yes & lowresspass2!=yes & lowresspass3!=yes & name=* [0x11607 resolution 23-23 continue]
+(natural=col | natural=saddle ) & lowresspass!=yes & lowresspass2!=yes & lowresspass3!=yes [0x11607 resolution 24 continue]
+
+leisure=golfcourse {set leisure=golf_course}
+leisure=golf_course 	& (mkgmap:area2poi!=true | name=*)									[0x10e05 resolution 23 continue]
+sport=golf & !(leisure=golf_course | leisure=golfcourse) & (mkgmap:area2poi!=true | name=*) [0x10e05 resolution 24 continue]
+leisure=marina 	| amenity=ferry_terminal | amenity=harbour | harbour=yes	[0x11009 resolution 24 continue]
+leisure=marina 	| amenity=ferry_terminal | amenity=harbour | harbour=yes 	[0x11910 resolution 22-23 continue]
+
+leisure=park & mkgmap:area2poi!=true						[0x2c06 resolution 24 continue]
+leisure=pitch 	& mkgmap:area2poi!=true						[0x10d13 resolution 24 continue]
+leisure=stadium & name=*									[0x11911 resolution 22-22 continue]
+leisure=stadium 											[0x11911 resolution 23-24 continue]
+leisure=stadium & name=*									[0x10d08 resolution 24 continue]
+leisure=stadium 											[0x10d08 resolution 24 continue]
+leisure=track 	& mkgmap:area2poi!=true						[0x10d13 resolution 24 continue]
+
+leisure=sports_center | leisure=sportscenter | leisure=sportscentre {set leisure=sports_centre}
+(leisure=sports_centre & ( mkgmap:area2poi!=true | name=*) & !(leisure ~ '.*(fitness)' | sport ~ '.*(fitness)')) {set name='sports_centre ${name}' | 'leisure=sports_centre'} [0x2c08 resolution 22 continue]
+
+information=office	{set name='infooffice ${name}' | 'infooffice' }			[0x10c04 resolution 24 continue]
+information=office	{set name='infooffice ${name}' | 'infooffice' }			[0x2f0c resolution 24 continue]
+information=office	{set name='infooffice ${name}' | 'infooffice' }			[0x11701 resolution 22-23 continue]
+
+
+##### Important POIs
+
+
+railway=station 				{set name='station ${name}' | 'station' } 				[0x11008 resolution 24 continue with_actions]
+railway=station 																		[0x11505 resolution 22-23 continue] 
+# 11008 not properly shown on all resoulution in Mapsource
+
+railway=subway_entrance | railway=subwayentrance 	{set name='tube ${name}' | 'tube' } [0x1101f resolution 24]
+
+railway=halt 				{set name='RW halt ${name}' | 'railway halt' } 				[0x11501 resolution 24 continue with_actions]
+railway=halt 																			[0x2f08 resolution 24 continue]
+
+railway=tram_stop | railway=tramstop	{set name='tram_stop ${name}' | 'tram_stop' } 	[0x11017 resolution 24]
+station=light_rail {set name='lightrail ${name}' | 'lightrail stop' } 					[0x11017 resolution 24]
+
+railway=stop {set name='stop ${name}' | 'railway stop' } 								[0x11503 resolution 24 continue with_actions]
+railway=stop 																			[0x2f08 resolution 24]
+
+highway=bus_station | amenity=bus_station | amenity=busstation | highway=busstation {set name='bus_station ${name}' | 'bus_station' } 	[0x11504 resolution 23 continue with_actions]
+highway=bus_station | amenity=bus_station | amenity=busstation | highway=busstation 													[0x2f08 resolution 24 continue]
+
+highway=bus_stop | amenity=bus_stop	| highway=busstop | amenity=busstop	| railway=bus_stop	{set name='bus_stop ${name}' | 'bus_stop' } [0x2f17 resolution 24]
+
+
+
+amenity=hospital | healthcare=hospital										[0x11102 resolution 24 continue]
+amenity=hospital | healthcare=hospital										[0x11917 resolution 23-24 continue]
+# amenity=hospital | healthcare=hospital	& mkgmap:area2poi!=true				[0x11917 resolution 22-22 continue]
+tourism=guest_house | tourism=bed_and_breakfast {set name='${name} guesthouse' | 'guesthouse' } 	[0x2b02 resolution 23]
+# tourism=camp_site 	 {set name='${name}' | 'campsite' }					[0x2b05 resolution 24 continue]
+tourism=camp_site 	 {set name='${name}' | 'campsite' }						[0x10c05 resolution 24 continue]
+tourism=camp_site 	 {set name='${name}' | 'campsite' }						[0x11916 resolution 21-24 continue]
+# tourism=caravan_site {set name='${name} caravan_site' | 'caravan_site' }	[0x2b05 resolution 24 continue]
+tourism=caravan_site {set name='${name} caravan_site' | 'caravan_site' }	[0x10c03 resolution 24 continue]
+tourism=caravan_site {set name='${name} caravan_site' | 'caravan_site' }	[0x11915 resolution 22-24 continue]
+tourism=hostel {set name='${name} hostel' | 'hostel' } 						[0x2b07 resolution 24 continue]
+tourism=hostel {set name='${name} hostel' | 'hostel' } 						[0x11511 resolution 22-22 continue]
+tourism=hostel {set name='${name} hostel' | 'hostel' } 						[0x11510 resolution 23-24 continue]
+
+tourism=hotel  {set name='${name} hotel' | 'hotel' } 						[0x2b01 resolution 24 continue]
+tourism=motel  {set name='${name} motel' | 'motel' } 						[0x2b01 resolution 24 continue]
+
+( tourism=resort | tourism=theme_park | tourism=themepark | tourism=zoo ) & name!=* & mkgmap:area2poi=true {delete tourism}
+tourism=resort 																[0x2b04 resolution 24 continue]
+tourism=theme_park {set name='${name} theme_park' }							[0x10d01 resolution 24 continue]
+tourism=theme_park {set name='${name} theme_park' }							[0x11514 resolution 23-24]
+
+tourism=wine_cellar {set name='${name} wine_cellar' }						[0x2c0a resolution 24]
+
+tourism=zoo | amenity=zoo {set name='${name} Zoo' | 'Zoo' }					[0x10d07 resolution 24 continue]
+tourism=zoo | amenity=zoo {set name='${name} Zoo' | 'Zoo' }					[0x11515 resolution 23-24]
+
+(leisure=ice_rink |(leisure=sports_centre & sport=ice_skating) | (leisure=stadium & sport=ice_skating) | (leisure=pitch & sport=ice_skating)) {set name='${name} ice_skating' | 'ice_skating' }[0x2d08 resolution 24]
+
+leisure=waterpark {set leisure=water_park}
+leisure=swimming_pool & access=no {delete leisure}
+leisure=swimming_pool & access=private & name!=* {delete leisure}
+amenity=swimming_pool | amenity=swimmingpool {delete amenity; set leisure=swimming_pool}
+leisure=swiming 							{set leisure=swimming}
+leisure=swiming_pool | leisure=swimmingpool  {set leisure=swimming_pool}
+
+leisure=swimming_pool & access=private {delete leisure}
+sport=swiming 								{set sport=swimming}
+sport=swimming & (leisure=swimming | leisure=swimming_pool | leisure=water_park) {delete sport}
+sport=swimming & access=private {delete sport}
+(leisure=swimming | leisure=swimming_pool | leisure=water_park ) & mkgmap:area2poi=true	& name!=* {delete leisure}
+sport=swimming & mkgmap:area2poi=true	& name!=* {delete sport}
+
+leisure=water_park 		{set name='${name} waterpark' }										[0x2d09 resolution 24 continue]
+leisure=water_park 		{set name='${name} waterpark' }										[0x1160e resolution 22-24]
+
+leisure=swimming_pool				{set name='${name} swimming_pool' | 'swimming_pool' }	[0x11912 resolution 22-24 continue]
+leisure=swimming | sport=swimming	{set name='${name} swimming' | 'swimming' }				[0x11912 resolution 22-24 continue]
+leisure=swimming_pool				{set name='${name} swimming_pool' | 'swimming_pool' }	[0x10e09 resolution 24]
+leisure=swimming | sport=swimming	{set name='${name} swimming' | 'swimming' }				[0x10e09 resolution 24]
+
+
+
+
+historic=museum | tourism=museum | amenity=museum							[0x10d02 resolution 23]
+
+
+building=chapel | historic=chapel | building=christian_church | amenity=christian_church {set amenity=place_of_worship}
+( amenity=place_of_worship | building=church	| historic=monastery | building=cathedral | historic=church | historic=cathedral | historic=place_of_worship ) & ruins=yes	[0x1160d resolution 24]
+amenity=place_of_worship | building=church	| historic=monastery			[0x10d0d resolution 24 continue]
+amenity=cathedral | building=cathedral	| historic=cathedral				[0x11718 resolution 21-24]
+amenity=place_of_worship | building=church	| historic=monastery			[0x11718 resolution 23-24]
+
+
+
+
+
+
+
+
+# barrier=cycle_barrier				[0x2f1c resolution 22]
+# barrier=cattle_grid	| barrier=cattel_grid	{ add mkgmap:road-class ='+1' } [0x2f1d resolution 24]
+barrier=toll_booth		{set name='tollbooth ${name}'}	[0x11106 resolution 24 continue]
+barrier=toll_booth		{set name='tollbooth ${name}'}	[0x11918 resolution 23-24 continue]
+# barrier=toll_booth				[0x11506 resolution 24 continue]
+# barrier=stile						[0x2f1f resolution 24]
+# barrier=bump_gate					[0x2918 resolution 24]
+# barrier=bumpgate					[0x2918 resolution 24]
+# barrier=block						[0x2919 resolution 24]
+# barrier=hampshire_gate			[0x291a resolution 24]
+# barrier=hampshiregate				[0x291a resolution 24]
+# barrier=sally_port				[0x291b resolution 24]
+# barrier=sallyport					[0x291b resolution 24]
+barrier=border_controll | amenity=border_controll | amenity=bordercontroll | barrier=bordercontroll	| barrier=border_control | amenity=border_control | amenity=bordercontrol | barrier=bordercontrol	[0x11106 resolution 24 continue]
+barrier=border_controll | amenity=border_controll | amenity=bordercontroll | barrier=bordercontroll	| barrier=border_control | amenity=border_control | amenity=bordercontrol | barrier=bordercontrol	[0x11918 resolution 22-24]
+# barrier=kissing_gate				[0x291e resolution 24]
+# barrier=kissinggate 				[0x291e resolution 24]
+# barrier=lift_gate					[0x291f resolution 24]
+# barrier=liftgate					[0x291f resolution 24]
+
+
+#missing bump_gate, block, border_controll,kissing_gate, entrance, lift_gate, sally_port, hampshire_gate
+
+# Traffic
+( highway=traffic_signal | crossing=traffic_signal | highway=traffic_signals | crossing=traffic_signals | highway=traffic_lights | crossing=traffic_lights |	highway=traffic_light | crossing=traffic_light	| 	highway=traffic_light | crossing=traffic_light ) { add mkgmap:road-speed ='-1'; add mkgmap:road-class ='-1' }		
+# [0x330c resolution 24] for traffic_signals # deleted from typfile during major cleanup.
+
+# highway=crossing 																			[0x290d resolution 24] # not 0x29 is not shown on etrex 30
+highway=stop {add mkgmap:road-speed	='-1'}
+# highway=stop {add mkgmap:road-speed	='-1'}												[0x1171a resolution 24] # deleted symbol from typ
+# traffic_sign=city_limit 																	[0x330e resolution 24] # deleted sign from typ
+# highway=speed_camera 		{set name='maxspeed ${maxspeed} km/h'} 							[0x5601 resolution 24]
+# highway=motorway_junction & proposed!=* {set name='${ref} ${name}' | '${name}'| '${ref}'}	[0x1171c resolution 24] # deleted symbol from typ
+# highway=motorway_exit & proposed!=* 	{set name='${ref} ${name}' | '${name}'| '${ref}'}	[0x2700 resolution 24]
+highway=services 						{set name='${ref} ${name}' | '${name}'| '${ref}'}	[0x2f16 resolution 23]
+highway=rest_area						{set name='${ref} ${name}' | '${name}'| '${ref}'}	[0x2f16 resolution 24]
+amenity=fuel 																				[0x2f01 resolution 23]
+amenity=bicycle_parking 	{set name='bikepark ${name}' | 'bikepark' }						[0x1100b resolution 23]
+
+amenity=parking & mkgmap:area2poi!=true			{set name='carpark ${name}'  | 'carpark'  }	[0x2f0b resolution 24]
+# railway=crossing 								{ add mkgmap:road-speed ='-1' }				[0x11906 resolution 24] # deleted symbol from typ
+# railway=level_crossing 						{ add mkgmap:road-speed ='-1' }				[0x11906 resolution 24]
+# railway=mini_roundabout						{ add mkgmap:road-speed ='-1' }				[0x11906 resolution 24]
+railway=crossing 								{ add mkgmap:road-speed ='-1' }		
+railway=level_crossing 							{ add mkgmap:road-speed ='-1' }
+railway=mini_roundabout							{ add mkgmap:road-speed ='-1' }				
+
+
+
+
+
+
+( building:type=mainly_ruinos | building:type=completly_ruinos | building:type=completely_ruinos | building:type=recognizable_remains | building:type=ruinos ) & ( historic=* | castle_type=* | amenity=place_of_worship ){set ruins=yes} 
+
+(castle_type=* ) & mkgmap:area2poi=true	& name!=* {delete castle_type}
+(historic=* ) & mkgmap:area2poi=true	& name!=* {delete historic}
+
+castle_type=* | historic=fortress | historic=castle | historic=burg | historic=festung | historic=palace | historic=schloss | historic=kremlin | historic=stately | historic=palace [0x2c02 resolution 24 continue]
+
+( castle_type=burg | castle_type:de=burg | castle_type=defensive | castle_type=shiro | historic=shiro ) & ( ruins=yes | ruins=true )	[0x11611 resolution 22]
+castle_type=burg | castle_type:de=burg | castle_type=defensive | castle_type=shiro 	| historic=shiro								[0x1160f resolution 22]
+castle_type=castrum | historic=castrum 																				[0x11610 resolution 23]
+
+( castle_type=stately | castle_type=palace | castle_type:de=schloss | castle_type=kremlin  )	& ruins=yes			[0x11613 resolution 22]
+( historic=fortress | castle_type=fortress | castle_type:de=festung | castle_type=citadel ) & ruins=yes				[0x11612 resolution 22]
+
+historic=fortress | historic=burg | castle_type=fortress | castle_type:de=festung | castle_type=citadel				[0x11719 resolution 22]
+
+castle_type=stately | castle_type=palace | castle_type:de=schloss | castle_type=kremlin  							[0x1171b resolution 22]
+
+( amenity=castle | historic=castle | historic=schloss | historic=stately )	& ruins=yes								[0x11613 resolution 22]
+( amenity=castle | historic=castle | historic=schloss | historic=stately ) & ruins!=yes								[0x11719 resolution 22]
+
+historic=mine													[0x6402 resolution 22]
+
+# war wie museum
+historic=monument 	{set name='${name} monument'|'monument'}	[0x2c0f resolution 23] #found?
+historic=memorial 	{set name='${name} memorial'|'memorial'}	[0x2c10 resolution 24] #found?
+historic=archaeological_site 									[0x640a resolution 24]
+historic=ruins 		{set name='${name} ruins'|'ruins'}			[0x6404 resolution 23]
+
+church=* & (building!=church | historic!=monastery | amenity!=place_of_worship)	[0x10d0d resolution 24]
+# historic=battlefield [0x2c* resolution 24]
+
+
+
+(aeroway=* ) & mkgmap:area2poi=true	& name!=* {delete aeroway}
+(aeroway=airport | amenity=airport	) & name=*		[0x2f04 resolution 22]
+(aeroway=aerodrome | amenity=aerodrome) & name=*	[0x2f04 resolution 22]
+aeroway=terminal 		& name=*					[0x2f04 resolution 24]
+
+# 0x5903 would be possible too for airport
+# 0x5904=heliport
+
+leisure=fishing		 	[0x10902 resolution 23]
+
+
+# military
+military=bunker & mkgmap:area2poi!=true [0x11615 resolution 24]
+military=naval_base & name=* [0x11615 resolution 24]
+
+# Natural and Points for Orientation
+(natural=volcano ) & mkgmap:area2poi=true	& name!=* {delete natural}
+natural=beach 									[0x6501 resolution 24 continue]
+natural=beach 	& mkgmap:area2poi!=true			[0x11516 resolution 23 continue]
+# natural=cliff 								[0x2c13 resolution 24 continue]
+# maybe take natural=rock / stone out.
+( natural=rock | natural=rocks | natural=stone ) & name=* & mkgmap:area2poi!=true [0x11616 resolution 24 continue]
+natural=geyser | natural=geysir					[0x11617 resolution 24 continue]
+# natural=glacier & mkgmap:area2poi!=true		[0x1160c resolution 24 continue]
+natural=cave_entrance 							[0x640c resolution 22]
+natural=cave 									[0x11502 resolution 23 continue]
+natural=stream	& mkgmap:area2poi!=true & mkgmap:line2poi!=true		[0x6512 resolution 24 continue]
+# 6619 wird mit Symbol angezeigt
+
+natural=volcano 								[0x6614 resolution 24 continue]
+natural=volcano 								[0x11618 resolution 23-23 continue]
+natural=volcano 								[0x18610 resolution 22-22 continue]
+natural=wetland 	& mkgmap:area2poi!=true		[0x11816 resolution 24 continue]
+
+
+
+
+
+tourism=viewpoint 								[0x11913 resolution 23-24 continue]
+tourism=viewpoint 								[0x10d04 resolution 24 continue]
+tourism=attraction 	& name=*					[0x2c04 resolution 24 continue]
+tourism=attraction 	& name=*					[0x11619 resolution 23-24]
+
+
+
+
+# Shopping
+# Not shown on Oregon: 2e0d - 2e0f as well as 2e1?
+# not used 2e0c, 
+
+shop='bicycle;motorcycle' {set shop='bicycle' }
+shop='bicycle; motorcycle' {set shop='bicycle' }
+shop='motorcycle;bicycle' {set shop='bicycle' }
+shop='motorcycle; bicycle' {set shop='bicycle' }
+shop=bike {set shop='bicycle'}
+shop=bicycle 								{set shopmatch=no; set name='${name} bikeshop'|'bike shop'} 		[0x11003 resolution 24 continue with_actions]
+shop=bicycle 																									[0x1151b resolution 22-24 continue]
+shop=bicycle_repair | amenity=bicycle_repair {set shopmatch=no; set name='${name} bikerepair'|'bike repair'}  	[0x11003 resolution 24 continue with_actions]
+shop=bicycle_repair | amenity=bicycle_repair																	[0x1151b resolution 22-24]
+
+# See http://wiki.openstreetmap.org/wiki/Proposed_features/car_service
+shop=carservice {set shop=car_service}
+(amenity=car_club | shop=car_service) & ( operator=* | car_service!=wrecker | car_service!=inspection | car_service=breakdown )	{set name='carservice ${name}' | 'car_service'; set shopmatch=no} 	[0x2f0d resolution 24 continue with_actions]
+(amenity=car_club | shop=car_service) & ( operator!=* | car_service=wrecker | car_service=inspection | car_service!=breakdown )	{set name='carservice ${name}' | 'car_service'; set shopmatch=no} 	[0x2f13 resolution 24 continue with_actions]
+
+((shop=car_club | shop=car_repair) & ( club=automobil | club=automobile | club=automobil_club )) | amenity=automobil_club | amenity=automobile_club	{set name='automobileclub ${name}' | 'car_service'; set shopmatch=no} [0x2f0d resolution 24 continue with_actions]
+(shop=car_club | shop=car_repair) & !( club=automobil | club=automobile | club=automobil_club )	{set name='carservice ${name}' | 'car_service'; set shopmatch=no} 	[0x2f13 resolution 24 continue with_actions]
+
+shop=car_rental | amenity=car_rental {set name='carrental ${name}' | 'car_rental'; set shopmatch=no} 			[0x2f0a resolution 24 continue with_actions]
+amenity=car_sharing {set name='carsharing ${name}' | 'car_sharing'; set shopmatch=no} 							[0x2f0a resolution 23 continue with_actions]
+
+shop=car_wrecker 						{set name='carwrecker ${name}' | 'car_wrecker'; set shopmatch=no}		[0x2f13 resolution 24 continue with_actions]
+(amenity=carrepair | shop=carrepair | amenity=werkstatt | amenity=autowerkstatt) {set shop=car_repair}
+amenity=car_repair | shop=car_repair {set name='carrepair ${name}' | 'car_repair'} 								[0x2f13 resolution 24]
+amenity=motorcycle_repair | shop=motorcycle_repair | shop=bike_repair | shop=motorbike_repair {set name='bikerepair ${name}' | 'motorcycle_repair'} [0x2f13 resolution 24]
+
+amenity=car_wash 						{set shopmatch=no} 	[0x2f0e resolution 24]
+shop=motorcycle | shop=bike | shop=motorbike		{set name='${name} motorcycle' | 'shop=motorcycle'; set shopmatch=no} 	[0x2f07 resolution 24 continue with_actions]
+# 2f0f is found as garmin Dealer
+
+shop=car 			{set name='${name} car' | 'shop=car'; set shopmatch=no} 				[0x2f07 resolution 24]
+shop=car_dealer 	{set name='${name} car_dealer' | 'shop=car_dealer'; set shopmatch=no} 	[0x2f07 resolution 24]
+shop=car_parts 		{set name='${name} car_parts' | 'shop=car_parts'; set shopmatch=no} 	[0x2f07 resolution 24]
+shop=tires | shop=tyres 		{set name='${name} tyres' | 'shop=tyres'; set shopmatch=no} [0x2f07 resolution 24]
+
+amenity=indoor_shopping_centre | shop=indoor_shopping_centre {set shop=mall2; delete amenity} 
+shop=indoor_shopping_centre {set shop=mall2} 
+shop=shopping_centre {set shop=mall2}
+shop=mall 	& (mkgmap:area2poi!=true | name=*)	{set shopmatch=no} [0x10f04 resolution 23 continue with_actions]
+shop=mall2 	& (mkgmap:area2poi!=true | name=*)	{set shopmatch=no} [0x2e04 resolution 24 continue with_actions]
+
+shop=department_store 					{set shopmatch=no} [0x2e01 resolution 24 continue with_actions]
+shop=department							{set shopmatch=no} [0x2e01 resolution 24 continue with_actions]
+shop=hardware 							{set shopmatch=no} [0x2e01 resolution 24 continue with_actions]
+shop=doityourself 						{set shopmatch=no} [0x2e01 resolution 24 continue with_actions]
+shop=grocery						 	{set name='${name} grocery' | 'shop=grocery'; set shopmatch=no} [0x2e02 resolution 24 continue with_actions]
+shop=pastry 							{set name='${name} pastry' | 'shop=pastry'; set shopmatch=no} [0x2e02 resolution 24 continue with_actions]
+( shop=bakery | shop=bakers | shop=baker ) & pastry=yes 	{set name='${name} pastry' | 'shop=pastry'; set shopmatch=no} [0x2e02 resolution 24 continue with_actions]
+( shop=bakery | shop=bakers | shop=baker ) & pastry!=yes  	{set name='${name} baker' | 'shop=bakery'; set shopmatch=no} [0x2e02 resolution 24 continue with_actions]
+shop=supermarket | amenity=supermarket 	{set shopmatch=no} [0x2e03 resolution 24 continue with_actions]
+shop=convenience 						{set shopmatch=no} [0x2e06 resolution 24 continue with_actions]
+shop=deli 																	{set name='${name} deli' | 'shop=deli'; set shopmatch=no}  [0x2e06 resolution 24 continue with_actions]
+shop=clothes 																{set shopmatch=no} [0x2e07 resolution 24 continue with_actions]
+shop=fashion 																{set shopmatch=no} [0x2e07 resolution 24 continue with_actions]
+shop=shoes	 																{set name='${name} shoes' | 'shop=shoes' ;set shopmatch=no} [0x2e07 resolution 24 continue with_actions]
+shop=apparel 																{set shopmatch=no} [0x2e07 resolution 24 continue with_actions]
+shop=garden_centre | shop=garden_center & (mkgmap:area2poi!=true | name=*)	{set name='${name} garden' | 'shop=gardencentre' ;set shopmatch=no} [0x2e08 resolution 24 continue with_actions]
+shop=furniture 																{set shopmatch=no} [0x2e09 resolution 24 continue with_actions]
+shop=organic | shop=greengrocer												{set shopmatch=no} [0x2e0a resolution 24 continue with_actions]
+(shop=computer | shop=computers	)	& (mkgmap:area2poi!=true | name=*)		{set name='${name} computer' | 'shop=computer'; set shopmatch=no} [0x2e0b resolution 24 continue with_actions]
+(shop=electronics | shop=electronic )	& (mkgmap:area2poi!=true | name=*)	{set name='${name} electronics' | 'shop=electronics'; set shopmatch=no} [0x2e0b resolution 24 continue with_actions]
+shop=hifi 				& (mkgmap:area2poi!=true | name=*)					{set name='${name} hifi' | 'shop=hifi'; set shopmatch=no} [0x2e0b resolution 24 continue with_actions]
+shop=boat | shop=marine														{set name='${name} boat' | 'shop=boat'; set shopmatch=no} [0x2f09 resolution 24 continue with_actions] 
+#0x2f09 found under others:marine-services
+shop=general	& (mkgmap:area2poi!=true | name=*)							{set shopmatch=no} [0x10f00 resolution 24 continue with_actions]
+(shop=butchers | shop=butcher) 												{set name='${name} butcher' | 'shop=butchers'; set shopmatch=no} [0x2e02 resolution 24 continue with_actions]
+shop=seafood 	 															{set name='${name} seafood' | 'shop=seafood'; set shopmatch=no} [0x2e02 resolution 24 continue with_actions]
+( shop=beverages | shop=alcohol )											{set name='${name} beverages' | 'shop=beverages'; set shopmatch=no} [0x2e02 resolution 24 continue with_actions]
+#0x10f02 is also found as grocery under shops (like 0x2e02). 
+shop=stationary & mkgmap:area2poi!=true										{set name='${name} stationery' | 'shop=stationery'; set shopmatch=no} 	[0x10f00 resolution 24]
+shop=chemist 	& mkgmap:area2poi!=true										{set name='${name} chemist' | 'shop=chemist'; set shopmatch=no} [0x10f05 resolution 24 continue with_actions]
+shop=chemist 	& name=* & mkgmap:area2poi=true								{set name='${name} chemist' | 'shop=chemist'; set shopmatch=no} [0x10f05 resolution 24 continue with_actions]
+
+shop=outdoor 												{set shopmatch=yes} 	[0x11705 resolution 23 continue with_actions]
+(shop=hairdresser ) & mkgmap:area2poi!=true 				{set shopmatch=yes} [0x1161d resolution 24 continue with_actions]
+shop=florist 	& mkgmap:area2poi!=true						{set shopmatch=no} [0x1161e resolution 24 continue with_actions]
+shop=optician 	& mkgmap:area2poi!=true						{set shopmatch=yes} [0x11702 resolution 24 continue with_actions]
+shop=toys 	& mkgmap:area2poi!=true							{set shopmatch=no} [0x11703 resolution 24 continue with_actions]
+shop=video 	& mkgmap:area2poi!=true							{set shopmatch=no} [0x11704 resolution 24 continue with_actions]
+shop=videos	& mkgmap:area2poi!=true							{set shopmatch=no} [0x11704 resolution 24 continue with_actions]
+shop=dvd 		& mkgmap:area2poi!=true						{set shopmatch=no} [0x11704 resolution 24 continue with_actions]
+shop=books 	| shop=book										{set shopmatch=yes} [0x11707 resolution 24 continue with_actions]
+shop=laundry | shop=dry_cleaning 	& mkgmap:area2poi!=true	{set shopmatch=no} [0x11709 resolution 24 continue with_actions]
+shop=kiosk 		& mkgmap:area2poi!=true						{set shopmatch=yes} [0x1170a resolution 24 continue with_actions]
+shop=sports | shop=sport									{set name='${name} sports' | 'shop=sports'; set shopmatch=yes} [0x1170f resolution 22 continue with_actions]
+(shop=adult | shop=erotic) & mkgmap:area2poi!=true {set name='${name} sexshop' | 'sexshop'; set shopmatch=yes}  [0x11707 resolution 24 continue with_actions]
+
+
+
+
+shop=* & shopmatch=yes 	& name=*							[0x2e00 resolution 24 continue]
+shop=* 	& mkgmap:area2poi!=true & shopmatch!=* & shop!=general & shop!=beauty & shop!=audiologist & shop!=massage & shop!=bed & shop!=boutique & shop!=carpentry & shop!=carpenter & shop!=curtain & shop!=frame & shop!=fabric & shop!=fabrics & shop!=furnace & shop!=glaziery & shop!=hearing_aids & shop!=interior_decoration & shop!=jewelry & shop!=kitchen & shop!=mobile_phone & shop!=paint & shop!=pawnbroker	& shop!=pet & shop!=tattoo & shop!=vacuum_cleaner [0x10f00 resolution 24]
+
+
+
+
+
+
+
+
+
+tourism=chalet & mkgmap:area2poi!=true			[0x1161a resolution 24]
+# amenity=bench 								[0x330d resolution 24] go back to rev 700 to find symbol.
+(amenity=playground | leisure=playground ) & mkgmap:area2poi!=true		[0x1161b resolution 24]
+
+information=mtbmap	{set name='mtbmap ${name}' | 'mtbmap' }				[0x4c01 resolution 22]
+information=cyclemap	{set name='cyclemap ${name}' | 'cyclemap' }		[0x4c01 resolution 22]
+information=bicyclemap	{set name='bicyclemap ${name}' | 'bicyclemap' }	[0x4c01 resolution 22]
+
+mtb=true {set mtb=yes}
+hiking=true {set hiking=true}
+information=map & mtb=yes	{set name='mtbmap ${name}' | 'mtbmap' }			[0x4c01 resolution 21]
+information=map & bicycle=yes	{set name='cyclemap ${name}' | 'cyclemap' }	[0x4c01 resolution 22]
+information=map & hiking=yes {set name='hikingmap ${name}' | 'hikingmap' }	[0x4c01 resolution 22]
+
+information=sitemap	{set name='sitemap ${name}' | 'sitemap' }			[0x4c01 resolution 22]
+information=hikingmap	{set name='hikingmap ${name}' | 'hikingmap' }	[0x4c01 resolution 22]
+information=pistemap	{set name='pistemap ${name}' | 'pistemap' }		[0x4c01 resolution 22]
+information=nature	{set name='natureinfo ${name}' | 'natureinfo' }		[0x4c01 resolution 22]
+information=wildlife {set name='wildlifeinfo ${name}' | 'wildlifeino' }	[0x4c01 resolution 22]
+information=citymap	{set name='citymap ${name}' | 'citymap' }			[0x4c01 resolution 22]
+information=map	{set name='infomap ${name}' | 'infomap' }				[0x4c01 resolution 22]
+information=board 	{set name='inboard ${name}' | 'infoboard' }			[0x4c02 resolution 22]
+bicycle=true {set bicycle=yes}
+( information=guidepost | amenity=guidepost ) & bicycle=yes				[0x1161f resolution 24]
+( information=guidepost | amenity=guidepost ) & bicycle!=yes & name=*	[0x11600 resolution 24]
+( amenity=signpost | information=signpost	) & name=*					[0x11600 resolution 24]
+tourism=information     												[0x4c02 resolution 24]
+
+tourism=artwork 														[0x2c0f resolution 24] # not findable?
+
+
+
+
+
+(sport=* & sport!=golf & sport!=swimming & sport!=skating & sport!=skateboard ) & mkgmap:area2poi=true	& name!=* {delete sport}
+sport=8pin 		{set name='8pin ${name}' | '8pin' }		[0x2d07 resolution 24]
+sport=9pin 		{set name='9pin ${name}' | '9pin' }		[0x2d07 resolution 24]
+sport=ninepins	{set name='9pin ${name}' | '9pin' }		[0x2d07 resolution 24]
+sport=10pin 	{set name='10pin ${name}' | '10pin' }	[0x2d07 resolution 24]
+sport=multi 			[0x2c08 resolution 24]
+sport=skiing 			[0x2d06 resolution 24 continue]
+sport=skiing  & mkgmap:area2poi!=true	[0x11814 resolution 22]
+sport=airport	| sport=model_aerodrome	[0x2d0b resolution 24]
+# sport=swimming is above already.
+sport=skating {set name='skating ${name}' | 'sport=skating' } 	[0x2d08 resolution 24]
+sport=inline_skating | sport=inlineskating {set name='skating ${name}' | 'sport=skating' } 	[0x2d08 resolution 24]
+sport=skateboard {set name='skateboard ${name}' | 'sport=skateboard' } 		[0x2d08 resolution 24]
+sport=ice_skating | sport=iceskating {set name='ice_skating ${name}' | 'sport=ice_skating' } 	[0x2d08 resolution 24]
+
+(sport=miniature_golf | sport=minigolf | sport=mini_golf	) & (mkgmap:area2poi!=true | name=*) 	{set name='minigolf ${name}' | 'sport=minigolf' } 	[0x2d05 resolution 24]
+(leisure=miniature_golf | leisure=mini_golf | leisure=minigolf ) & (mkgmap:area2poi!=true | name=*) {set name='minigolf ${name}' | 'leisure=minigolf' }	[0x2d05 resolution 24]
+
+# Note the crap that goes on here. No way to know what is what.... http://wiki.openstreetmap.org/wiki/Proposed_features/Gym
+( leisure=sports_centre & ( mkgmap:area2poi!=true | name=*) & sport ~ '.*(fitness)' ) {set name='fitness ${name}' | 'fitness_centre'} [0x2d0a resolution 24 continue]
+(leisure=* | sport=*) & (leisure ~ '.*(fitness)' | sport ~ '.*(fitness)') & leisure!=sports_centre {set name='fitness ${name}' | 'fitness_centre'} [0x2d0a resolution 24 continue]
+( amenity=gym & leisure!=sports_centre & !(leisure ~ '.*(fitness)' | sport ~ '.*(fitness)')) {set name='fitness ${name}' | 'fitness_centre'} [0x2d0a resolution 24 continue]
+
+(sport=* & sport!=cycling & sport!=car_racing & sport!=fishing & sport!=table_soccer & amenity!=pub & amenity!=restaurant & sport!=dart & sport!=swimming & amenity!=pitch & amenity!=track 
+& shop!=sport & shop!=sports & shop!=bicycle & leisure!=track & leisure!=stadium & leisure!=sports_centre & sport!=cue & sport!=billiard & sport!=pool & sport!=snooker & leisure!=golf_course & leisure!=water_park & leisure!=swimming_pool 
+& landuse!=piste & tourism!=* & sport!=chess & sport!=sailing & sport!=dog_training & sport!=dog & sport!=via_ferrata & sport!=rc_car & sport!=cricket_nets & sport!=dog_racing & sport!=equestrian & sport!=golf & sport!=horse_racing & sport!=orienteering & ((sport=paragliding | sport=free_flying) & mkgmap:area2poi=true) &
+sport!=toboggan & sport!=skateboard & access!=private ) [0x2d0a resolution 24 continue]
+
+
+
+sport=motor 			[0x11812 resolution 24]
+sport=hockey 			[0x11800 resolution 24]
+sport=athletics 		[0x11801 resolution 24]
+sport=soccer 			[0x11802 resolution 24]
+sport=volleyball 		[0x11803 resolution 24]
+sport=basketball 		[0x11804 resolution 24]
+sport=table_tennis 		[0x11805 resolution 24]
+sport=tennis 			[0x11806 resolution 24]
+sport=handball 			[0x11807 resolution 24]
+sport=team_handball 	[0x11807 resolution 24]
+sport=boules 			[0x11808 resolution 24]
+sport=archery 			[0x11811 resolution 24]
+sport=diving 			[0x1180a resolution 24]
+sport=cricket 			[0x1180b resolution 24]
+sport=rubgy 			[0x11813 resolution 24]
+sport=climbing 			[0x11809 resolution 24]
+sport=equestrian 		[0x1180c resolution 24]
+sport=rugby 			[0x1180d resolution 24]
+sport=canoe 			[0x1180f resolution 24]
+sport=baseball 			[0x11810 resolution 24]
+
+# Shown again.
+# sport=*	& sport!=dart & sport!=swimming	[0x2c08 resolution 24]
+
+
+
+power=* & mkgmap:area2poi=true	{delete power}
+power_source=wind |  powersource=wind | power=wind	| man_made=power_wind | man_made=windpower | man_made=wind_power 	[0x1151e resolution 22]
+power=generator & (power_source=hydro | power_source=tidal | power_source=wave | power_source=geothermal) 				[0x11715 resolution 24]
+power=generator & (power_source=nuclear | power_source=fusion) 															[0x11714 resolution 24]
+power=generator & (power_source=biofuel | power_source=oil | power_source=coal | power_source=gas | power_source=waste) [0x11712 resolution 24]
+power=generator & (power_source=photovoltaic  | power_source=solar-thermal | power_source=solar) 						[0x11713 resolution 24]
+power=tower 			[0x11710 resolution 24]
+aerialway=pylon			[0x11710 resolution 24]
+# empty man_made 6415-16
+power=generator 		[0x11903 resolution 24]
+power=sub_station 		[0x11902 resolution 24]
+power=substation 		[0x11902 resolution 24]
+# 6609,6611,6612,6613 Geographic=land
+
+man_made=* & man_made!=lighthouse & ( mand_made!=tower & height>50) & ( mand_made!=communitcations_tower & height>50) & man_made!=water_tower & mkgmap:area2poi=true	{delete man_made}
+man_made=reservoir_covered 	[0x11716 resolution 24]
+man_made=reservoir 			[0x11716 resolution 24]
+man_made=water_tower 		[0x11716 resolution 23]
+man_made=tower & tower:type=observation	  								[0x11817 resolution 22 continue]
+man_made=tower & tower:type=communication & height>100					[0x11818 resolution 21-21 continue]
+man_made=tower & tower:type=communication & height>50					[0x11818 resolution 22 continue]
+man_made=tower & tower:type=communication & ( height<51 | height!=* )	[0x11818 resolution 23 continue]
+man_made=tower	& tower:type!=communication & tower:type!=observation	[0x11818 resolution 23 continue]
+man_made=lighthouse	| seamark=lighthouse								[0x1151d resolution 22]
+man_made=windmill 			[0x1150c resolution 22]
+man_made=wind_mill 			[0x1150c resolution 22]
+man_mane=water_mill	| man_made = water_works	[0x11519 resolution 23]
+man_made=communications_tower & height>100				[0x11513 resolution 21]
+man_made=communications_tower & ( height>50 | url=* )	[0x11513 resolution 22]
+man_made=communications_tower							[0x11513 resolution 23]
+man_made=mast											[0x11513 resolution 23]
+
+# man_made=surveillance 					  [ resolution 24]
+( man_made=gasometer  | man_made=storage_tank ) & mkgmap:area2poi!=true	[0x11901 resolution 24]
+man_made=mineshaft	& mkgmap:area2poi!=true	[0x11901 resolution 24]
+
+
+amenity=prison 		& mkgmap:area2poi!=true	[0x11717 resolution 24]
+man_made=survey_point 						[0x6405 resolution 24]
+# survey war 2c18
+# amenity=grit_bin 							[0x11711 resolution 24]
+# I think grit_bin is not really needed '
+
+leisure=hunting_blind | amenity=hunting_stand | amenity=hochstand | amenity=hunting_blind | amenity=blind | building=hunting_blind 	[0x11907 resolution 22]
+
+
+historic=wayside_cross | man_made=cross & !(natural=peak | natural=summit)	[0x11509 resolution 24]
+historic=wayside_shrine 													[0x11909 resolution 24]
+# add support for http://wiki.openstreetmap.org/wiki/Proposed_features/Cairn (tumulus // site_type=tumulus // historic=tumulus) once proposal is worthy
+
+
+( entrance=yes | entrance=true | barrier=entrance	| barrier=porticullis | barrier=sally_port ) & amenity!=* & shop!=* & leisure!=*	[0x1150b resolution 24]
+
+# Barriers
+# highway=gate | barrier=gate 		[0x4313 resolution 24] # deleted symbol on cleanup.
+# highway=bollard | barrier=bollard [0x1171e resolution 24] # deleted symbol on cleanup
+noexit=true | no_exit=true {set noexit=yes}
+highway=residential & ( noexit=yes | deadend=yes | no_exit=yes ) [0x11905 resolution 24]
+noexit=yes 							[0x11905 resolution 23]
+no_exit=yes 						[0x11905 resolution 23]
+deadend=yes  | deadend=true			[0x11905 resolution 23]
+
+
+# Add some objects of the sea - so map ain't that empty in the ocean:
+waterway=depth & name=* { name '${name|subst:,=>.}' } [ 0x6200 resolution 24]
+waterway=fuel { add mkgmap:xt-facilities='0x40'; }[ 0x010903 resolution 24 ]
+waterway=wreck | historic=wreck [ 0x010402 resolution 24 ]
+
+man_made=petroleum_well & name=* [0x11712 resolution 24]
+
+seamark:buoy_lateral:category=preferred_channel_starboard { add mkgmap:xt-colour='red-green-red'; }
+seamark:buoy_lateral:category=starboard | beacon=lateral_starboard_preferred [0x01020a resolution 23]
+
+
+# noexit is found as attraction. Yeahaa - map it. # don't think so many mappers used it (0x4a05) hence not searchable anymore.
+noexit=no				{set name='noexit=no ${name}' | 'way continues' }	[0x1150d resolution 23]
+fixme=continue			{set name='noexit=no ${name}' | 'way continues' }	[0x1150d resolution 23]
+fixme=continuation		{set name='noexit=no ${name}' | 'way continues' }	[0x1150d resolution 23]
+fixme=way_continues		{set name='noexit=no ${name}' | 'way continues' }	[0x1150d resolution 23]
+fixme=street_continues	{set name='noexit=no ${name}' | 'way continues' }	[0x1150d resolution 23]
+fixme=incomplete		{set name='noexit=no ${name}' | 'way continues' }	[0x1150d resolution 24]
+
+note=* & building!=* & fixme=* & mkgmap:area2poi!=true	 {set addr:city='${addr:city}  (${note})' | '${note}'}
+# note=*	& building!=*	& mkgmap:area2poi!=true									[0x4316 resolution 24]
+note=*	& building!=* & fixme=*	& mkgmap:area2poi!=true								[0x2f00 resolution 24]
