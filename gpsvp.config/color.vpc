@@ -76,6 +76,7 @@
 40 0a BF 7F 7F 0 3
 40 0b BF 7F 7F 0 3
 #helius, unknown road
+40 0E BF 7F 7F 0 2
 40 11 BF 7F 7F 0 2
 40 0F BF 7F 7F 0 2
 40 0D BF 7F 7F 0 2
@@ -102,19 +103,19 @@
 #0x1fRiver
 40 1F 00 00 FF 0 2
 #0x20Land contour
+40 20 C0 C0 C0 0 1
 40 21 C0 C0 C0 0 1
-#40 30 30 30 00 0 2
-#40 30 30 30 00 0 2
+40 22 C0 C0 C0 0 1
 #0x23Depth Contour (thin) Depth in feet
-40 23 30 30 30 0 2
-40 24 30 30 30 0 2
-40 25 30 30 30 0 2
+40 23 C0 C0 30 0 2
+40 24 C0 C0 30 0 2
+40 25 C0 C0 30 0 2
 #0x26Intermittent River 
 40 26 00 00 FF 1 1
 # bicycle=no
 40 28 D0 D0 D0 1 1
 # Power line
-40 29 00 00 00 1 1
+40 29 80 80 80 1 1
 # Track (selected part)
 40 FF FF 00 FF 0 4
 # Vector
@@ -122,7 +123,7 @@
 # Scale
 40 FD FF FF FF 0 4 00 00 00 1 2 
 # Old track (selected part)
-40 FC 77 00 77 0 3
+40 FC FF 00 00 1 2
 # Old track, not selected part
 40 FB C0 C0 C0 0 3
 # Track, not selected part

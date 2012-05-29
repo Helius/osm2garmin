@@ -72,10 +72,10 @@ highway=trunk  [0x0B road_class=0 road_speed=1 resolution 16]
 highway=trunk_link [0x0B road_class=0 road_speed=1 resolution 16]
 highway=primary [0x0C road_class=1 road_speed=2 resolution 18]
 highway=primary_link [0x0C road_class=1 road_speed=2 resolution 18]
-highway=secondary [0x0D road_class=2 road_speed=3 resolution 20]
-highway=tertiary [0x0E road_class=2 road_speed=4 resolution 20]
-highway=unclassified | highway=minor [0x0F road_class=3 road_speed=5 resolution 20]
-highway=residential | highway=living_street | highway=service [0x10 road_class=3 road_speed=5 resolution 22]
+highway=secondary [0x0D road_class=2 road_speed=3 resolution 16]
+highway=tertiary [0x0E road_class=2 road_speed=4 resolution 16]
+highway=unclassified | highway=minor [0x0F road_class=3 road_speed=5 resolution 16]
+highway=residential | highway=living_street | highway=service [0x10 road_class=3 road_speed=5 resolution 20]
 
 # Unroutable paths
 highway=track & difficult=yes [0x26 resolution 22]
@@ -86,7 +86,7 @@ highway=pedestrian & area!=yes [0x28 resolution 22]
 # Routable paths
 highway=track | highway=byway | highway=unsurfaced [0x11 road_class=4 road_speed=4 resolution 20]
 highway=bridleway [0x12 road_class=3 road_speed=3 resolution 20]
-highway=cycleway [0x13 road_class=4 road_speed=5 resolution 20]
+highway=cycleway [0x13 road_class=4 road_speed=5 resolution 16]
 
 highway=* & area!=yes [0x17 ]
 
@@ -101,6 +101,8 @@ contour=elevation | contour_ext=elevation { name '${ele|conv:m=>ft}'; } [0x21 re
 # ------------------------------------------------------------------------------------
 # Miscellaneous stuff
 # ------------------------------------------------------------------------------------
+power=line | powerline=yes | power_line=yes | powerline=true		[0x29 resolution 22 continue]
+power=minor_line				[0x29 resolution 24 continue]
 
 railway=light_rail [0x14 resolution 18]
 railway=rail [0x14 resolution 18]
