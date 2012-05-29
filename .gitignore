@@ -1,3 +1,6 @@
 *.osm
 Srtm2Osm/
 mkgmap/
+*.img
+*.tdb
+srtm
