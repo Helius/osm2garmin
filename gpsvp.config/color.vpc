@@ -103,14 +103,16 @@
 40 1F 00 00 FF 0 2
 #0x20Land contour
 40 21 C0 C0 C0 0 1
-40 30 30 30 00 0 2
-40 30 30 30 00 0 2
+#40 30 30 30 00 0 2
+#40 30 30 30 00 0 2
 #0x23Depth Contour (thin) Depth in feet
 40 23 30 30 30 0 2
 40 24 30 30 30 0 2
 40 25 30 30 30 0 2
 #0x26Intermittent River 
 40 26 00 00 FF 1 1
+# bicycle=no
+40 28 D0 D0 D0 1 1
 # Power line
 40 29 00 00 00 1 1
 # Track (selected part)
