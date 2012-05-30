@@ -102,14 +102,16 @@
 40 1E 00 FF 00 1 1
 #0x1fRiver
 40 1F 00 00 FF 0 2
+
 #0x20Land contour
-40 20 C0 C0 C0 0 1
-40 21 C0 C0 C0 0 1
-40 22 C0 C0 C0 0 1
+40 20 FF FF FF 1 1
+40 21 A0 A0 A0 0 1
+40 22 B0 B0 BB 0 1
 #0x23Depth Contour (thin) Depth in feet
-40 23 C0 C0 30 0 2
-40 24 C0 C0 30 0 2
-40 25 C0 C0 30 0 2
+40 23 C0 C0 C0 0 1
+40 24 C0 C0 C0 0 1
+40 25 C0 C0 C0 0 1
+
 #0x26Intermittent River 
 40 26 00 00 FF 1 1
 # bicycle=no

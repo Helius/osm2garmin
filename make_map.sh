@@ -19,7 +19,7 @@ fi
 
 REGION_OSM="nsk.osm"        # name of main.map
 RECT="81.8,54.1,84.5,55.5"  # rect for main map region obtained from big map
-RECT_TEST="83,55.2,84,55.5" # the same, but small 
+RECT_TEST="83.1,54.85,84,55.5" # the same, but small 
 
 
 
@@ -29,7 +29,7 @@ if [ "$1" == "update_all" ]; then
 	# get contour line and make OSM file
 	mono Srtm2Osm/Srtm2Osm.exe -bounds3 "http://www.openstreetmap.org/?lat=54.758&lon=83.102&zoom=9&layers=M" -cat 250 50 -step 10 -o no.srtm.osm
 	# make garmin *.img from OSM contour map
-	java -Xmx2000M -jar mkgmap/mkgmap.jar --mapname=74010000 --transparent no.srtm.osm
+	java -Xmx2000M -jar mkgmap/mkgmap.jar --mapname=74010000 --style-file=cyclemap --transparent no.srtm.osm
 
 	# rm old data
 	rm RU-NVS.osm.bz2
@@ -40,7 +40,9 @@ if [ "$1" == "update_all" ]; then
 	bunzip2 -d RU-NVS.osm.bz2
 	# get nsk region from big nso map
 	./osmconvert32 RU-NVS.osm -b=$RECT >$REGION_OSM
+
 elif [ "$1" == "test_style" ]; then
+
 echo $HL"========== test style ============="$CL
 	if [ -f RU-NVS.osm ]; then
 		echo $HL"osm data exist:             ok"$CL
@@ -56,7 +58,7 @@ echo $HL"========== test style ============="$CL
 		bunzip2 -d RU-NVS.osm.bz2
 	fi
 	#check that nsk.osm not exist or has big size, then recreate it
-	if [[ ! -f "$REGION_OSM"  ]] || [[ "`stat -c%s $REGION_OSM`" -gt "1000000" ]] ; then
+	if [[ ! -f $REGION_OSM  ]] || [[ "`stat -c%s $REGION_OSM`" -gt "1000000" ]] ; then
 		echo $HL"get small test region"$CL
 		./osmconvert32 RU-NVS.osm -b=$RECT_TEST > $REGION_OSM
 	fi
