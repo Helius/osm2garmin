@@ -53,12 +53,18 @@ echo $HL"========== test style ============="$CL
 		fi
 		bunzip2 -d RU-NVS.osm.bz2
 	fi
-	echo $HL"get small test region"$CL
-	./osmconvert32 RU-NVS.osm -b=$RECT_TEST >nsk.osm
+	FILESIZE=$(stat -c%s nsk.osm)
+	if [ "$FILESIZE" -gt "1000000" ]; then
+		echo $HL"get small test region"$CL
+		./osmconvert32 RU-NVS.osm -b=$RECT_TEST >nsk.osm
+	fi
 elif [ "$1" == "rebuild_map" ]; then
 	echo $HL"========== rebuild map  ============="$CL
-	echo $HL"get nsk map region from big map"$CL
-	./osmconvert32 RU-NVS.osm -b=$RECT_TEST >nsk.osm
+	FILESIZE=$(stat -c%s nsk.osm)
+	if [ "$FILESIZE" -lt "1000000" ]; then
+		echo $HL"get nsk map region from big map"$CL
+	./osmconvert32 RU-NVS.osm -b=$RECT >nsk.osm
+	fi
 fi
 
 # make garmin *.img from main maps 
@@ -72,3 +78,13 @@ rm 74000000.img
 
 #calc md5 summ for result map
 md5sum gmapsupp.img
+DAY=`date +"%d-%b-%Y"`
+SUF=""
+ 
+if [ "$1" == "test_style" ]; then
+	SUF="small"
+elif [ "$1" == "rebuild_map" ]; then
+	SUF="reb"
+fi
+
+cp gmapsupp.img /data/dropbox/gps/maps/$DAY-gmapsupp-$SUF.img
