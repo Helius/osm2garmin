@@ -4,10 +4,10 @@ HL="[33m"
 CL="[0m"
 
 usage() {
-	  echo $HL"Usage: $0 [ update_all | rebuild_map | test_style ]"$CL
-		echo $HL"    update_all  - download new data and rebuild all"$CL
-		echo $HL"    rebuild_map - rebuild only nsk map with exist contours"$CL
-		echo $HL"    test_style  - like 'rebuild_map' but for small region (it's faster!)"$CL
+	  echo $HL"Usage: $0 [ update_all | rebuild_map | test_style ]"
+		echo "    update_all  - download new data and rebuild all"
+		echo "    rebuild_map - rebuild only nsk map with exist contours"
+		echo "    test_style  - like 'rebuild_map' but for small region (it's faster!)"
 		  exit
 }
 
@@ -17,9 +17,11 @@ fi
 
 
 
+REGION_OSM="nsk.osm"        # name of main.map
+RECT="81.8,54.1,84.5,55.5"  # rect for main map region obtained from big map
+RECT_TEST="83,55.2,84,55.5" # the same, but small 
 
-RECT="81.8,54.1,84.5,55.5"
-RECT_TEST="84.0,55.2,84.5,55.5"
+
 
 if [ "$1" == "update_all" ]; then
 
@@ -37,7 +39,7 @@ if [ "$1" == "update_all" ]; then
 	# unzip osm data
 	bunzip2 -d RU-NVS.osm.bz2
 	# get nsk region from big nso map
-	./osmconvert32 RU-NVS.osm -b=$RECT >nsk.osm
+	./osmconvert32 RU-NVS.osm -b=$RECT >$REGION_OSM
 elif [ "$1" == "test_style" ]; then
 echo $HL"========== test style ============="$CL
 	if [ -f RU-NVS.osm ]; then
@@ -53,28 +55,30 @@ echo $HL"========== test style ============="$CL
 		fi
 		bunzip2 -d RU-NVS.osm.bz2
 	fi
-	FILESIZE=$(stat -c%s nsk.osm)
-	if [ "$FILESIZE" -gt "1000000" ]; then
+	#check that nsk.osm not exist or has big size, then recreate it
+	if [[ ! -f "$REGION_OSM"  ]] || [[ "`stat -c%s $REGION_OSM`" -gt "1000000" ]] ; then
 		echo $HL"get small test region"$CL
-		./osmconvert32 RU-NVS.osm -b=$RECT_TEST >nsk.osm
+		./osmconvert32 RU-NVS.osm -b=$RECT_TEST > $REGION_OSM
 	fi
 elif [ "$1" == "rebuild_map" ]; then
 	echo $HL"========== rebuild map  ============="$CL
-	FILESIZE=$(stat -c%s nsk.osm)
-	if [ "$FILESIZE" -lt "1000000" ]; then
+	#check that nsk.osm not exist or has small size, then recreate it
+	if [[ ! -f "$REGION_OSM"  ]] || [[ `stat -c%s $REGION_OSM` -lt "1000000" ]] ; then
 		echo $HL"get nsk map region from big map"$CL
-	./osmconvert32 RU-NVS.osm -b=$RECT >nsk.osm
+	./osmconvert32 RU-NVS.osm -b=$RECT > $REGION_OSM
 	fi
 fi
 
 # make garmin *.img from main maps 
 #java -Xmx1000M -jar mkgmap/mkgmap.jar --style-file=openmtbmap --mapname=74000000 --transparent --generate-sea=polygons,extend-sea-sectors,close-gaps=6000 --reduce-point-density=5.4 --x-reduce-point-density-polygon=5.4 --index --adjust-turn-headings --ignore-maxspeeds --ignore-turn-restrictions --remove-short-arcs=4 --description=openmtbmap_ru --location-autofill=1 --route --country-abbr=ru RU-NVS.osm
 #java -Xmx2000M -jar mkgmap/mkgmap.jar --code-page=1251 --style-file=cyclemap --mapname=74000000 --transparent RU-NVS.osm
-java -Xmx2000M -jar mkgmap/mkgmap.jar --code-page=1251 --style-file=cyclemap --mapname=74000000 --transparent nsk.osm
+echo $HL"========== make main map  ============="$CL
+java -Xmx2000M -jar mkgmap/mkgmap.jar --code-page=1251 --style-file=cyclemap --mapname=74000000 --transparent $REGION_OSM
 # merge main maps and conoturs (order of arguments important!!, first maps, second contours) to gmapsupp.img garmin map
+echo $HL"========== merge map to gmapsupp  ============="$CL
 java -Xmx1000M -jar mkgmap/mkgmap.jar --gmapsupp 74000000.img 74010000.img
 # rm main map img
-rm 74000000.img
+#rm 74000000.img
 
 #calc md5 summ for result map
 md5sum gmapsupp.img
