@@ -84,13 +84,13 @@ java -Xmx1000M -jar mkgmap/mkgmap.jar --gmapsupp 74000000.img 74010000.img
 
 #calc md5 summ for result map
 md5sum gmapsupp.img
-DAY=`date +"%d-%b-%Y"`
+DAY=`date +"%d-%d-%Y"`
 SUF=""
  
 if [ "$1" == "test_style" ]; then
-	SUF="small"
+	SUF="-small"
 elif [ "$1" == "rebuild_map" ]; then
-	SUF="reb"
+	SUF="-reb"
 fi
 
-cp gmapsupp.img /data/dropbox/gps/maps/$DAY-gmapsupp-$SUF.img
+cp gmapsupp.img /data/dropbox/gps/maps/$DAY-gmapsupp$SUF.img
