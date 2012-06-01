@@ -39,7 +39,7 @@ echo $HL"get nsk map region from big map..."$CL
 }
 
 build_srtm () {
-	if [ -f $SRTMIMG_NAME ]; then
+	if [ -f $SRTMIMG_NAME.img ]; then
 	# make garmin *.img from OSM contour map
 	java -Xmx2000M -jar mkgmap/mkgmap.jar --mapname=$SRTMIMG_NAME --style-file=cyclemap --transparent no.srtm.osm
 	fi
@@ -52,7 +52,7 @@ java -Xmx2000M -jar mkgmap/mkgmap.jar --code-page=1251 --style-file=cyclemap --m
 
 make_img () {
 echo $HL"merge map to gmapsupp..."$CL
-java -Xmx1000M -jar mkgmap/mkgmap.jar --gmapsupp $MAPIMG_MANE $SRTMIMG_NAME
+java -Xmx1000M -jar mkgmap/mkgmap.jar --gmapsupp $MAPIMG_MANE.img $SRTMIMG_NAME.img
 DAY=`date +"%d-%m-%Y"`
 SUF="daily"
 cp gmapsupp.img /data/dropbox/gps/maps/$DAY-$SUF.img
