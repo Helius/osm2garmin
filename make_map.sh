@@ -26,8 +26,11 @@ RECT_TEST="83.1,54.85,84,55.5" # the same, but small
 if [ "$1" == "update_all" ]; then
 
 	echo $HL"========== update all ============="$CL
-	# get contour line and make OSM file
-	mono Srtm2Osm/Srtm2Osm.exe -bounds3 "http://www.openstreetmap.org/?lat=54.758&lon=83.102&zoom=9&layers=M" -cat 250 50 -step 10 -o no.srtm.osm
+	# get contour line and make OSM file, if not exist
+	if [ ! -f no.srtm.osm ]; then
+		mono Srtm2Osm/Srtm2Osm.exe -bounds3 "http://www.openstreetmap.org/?lat=54.758&lon=83.102&zoom=9&layers=M" -cat 250 50 -step 10 -o no.srtm.osm
+	fi
+
 	# make garmin *.img from OSM contour map
 	java -Xmx2000M -jar mkgmap/mkgmap.jar --mapname=74010000 --style-file=cyclemap --transparent no.srtm.osm
 
