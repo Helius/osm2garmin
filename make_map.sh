@@ -24,10 +24,13 @@ RECT_TEST="83.1,54.85,84,55.5" # the same, but small
 
 
 if [ "$1" == "update_all" ]; then
-
 	echo $HL"========== update all ============="$CL
+
 	# get contour line and make OSM file, if not exist
-	if [ ! -f no.srtm.osm ]; then
+	if [ -f no.srtm.osm ]; then
+		echo $HL"srtm.osm exist:         ok"$CL
+	else
+		echo $HL"========== make srt.osm file ============="$CL
 		mono Srtm2Osm/Srtm2Osm.exe -bounds3 "http://www.openstreetmap.org/?lat=54.758&lon=83.102&zoom=9&layers=M" -cat 250 50 -step 10 -o no.srtm.osm
 	fi
 
@@ -72,6 +75,9 @@ elif [ "$1" == "rebuild_map" ]; then
 		echo $HL"get nsk map region from big map"$CL
 	./osmconvert32 RU-NVS.osm -b=$RECT > $REGION_OSM
 	fi
+else
+	usage
+	exit
 fi
 
 # make garmin *.img from main maps 
@@ -87,7 +93,7 @@ java -Xmx1000M -jar mkgmap/mkgmap.jar --gmapsupp 74000000.img 74010000.img
 
 #calc md5 summ for result map
 md5sum gmapsupp.img
-DAY=`date +"%d-%d-%Y"`
+DAY=`date +"%d-%m-%Y"`
 SUF=""
  
 if [ "$1" == "test_style" ]; then
