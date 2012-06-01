@@ -55,7 +55,7 @@ echo $HL"merge map to gmapsupp..."$CL
 java -Xmx1000M -jar mkgmap/mkgmap.jar --gmapsupp $MAPIMG_MANE.img $SRTMIMG_NAME.img
 DAY=`date +"%d-%m-%Y"`
 SUF="daily"
-cp gmapsupp.img /data/dropbox/gps/maps/$DAY-$SUF.img
+cp gmapsupp.img /data/dropbox/gps/maps/$SUF.img
 }
 
 case "$1" in
