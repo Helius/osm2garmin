@@ -115,7 +115,7 @@
 #0x26Intermittent River 
 40 26 00 00 FF 1 1
 # bicycle=no
-40 28 D0 D0 D0 1 1
+40 28 D0 D0 D0 0 1
 # Power line
 40 29 80 80 80 1 1
 # Track (selected part)
