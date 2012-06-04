@@ -56,17 +56,41 @@
 80 49 00 00 FF
 
 80 4d 66 66 66# Glaciers
-80 4e 66 FF 66# Orchard or plantation
+80 50 66 FF 66# Orchard or plantation
 80 4f 99 FF 99# Scrub
-80 50 BF FF BF# Woods
+80 4e BF FF BF# Woods
 80 51 88 88 FF# Wetland 
 80 52 66 66 66# Tundra
 80 53 FF FF FF# Flats (island?)
+80 54 F5 E6 13# Beach
 
+# description
+# 40 [type] [color 1] [dotted flag 1] [width 1] [color 2] [dotted flag 2] [width 2]
+
+#highway = motorway
+40 1C 72 88 AE 0 6
 # Major highway
-40 01 BF 7F 7F 0 5
+40 01 7F 7F 7F 0 6 30 30 30 0 4
 # Principal highway
 40 02 BF 7F 7F 0 4
+# highway = motorway
+40 0b 00 00 00 0 8 44 B6 5E 0 6
+# highway = primary
+40 0c 00 00 00 0 7 CE 4E 68 0 5
+# highway = secondary
+40 0D 00 00 00 0 5 DC A1 48 0 3
+# highway = tertiary
+40 0E 00 00 00 0 5 F6 DF 48 0 3
+# highway = residential | living_street | living_street
+40 10 00 00 00 0 4 FF FF FF 0 2
+# highway = unclassified
+40 0F 00 00 00 0 4 A0 A0 A0 0 2
+# highway = unsurfaced | byway
+40 11 A4 79 42 0 4 FF FF FF 0 2
+# highway = not matched
+40 17 A0 A0 A0 0 2
+#helius: difficult road
+40 27 BF 7F 7F 1 1
 # Other highway road
 40 03 BF 7F 7F 0 4
 40 04 BF 7F 7F 0 4
@@ -74,16 +98,10 @@
 40 06 BF 7F 7F 0 4
 40 07 BF 7F 7F 0 3
 40 0a BF 7F 7F 0 3
-40 0b BF 7F 7F 0 3
-#helius, unknown road
-40 0E BF 7F 7F 0 2
-40 11 BF 7F 7F 0 2
-40 0F BF 7F 7F 0 2
-40 0D BF 7F 7F 0 2
-40 10 BF 7F 7F 0 2
+
 
 # Railroad
-40 14 00 00 00 0 3 FF FF FF 1 1
+40 14 50 50 50 0 3 FF FF FF 1 1
 # 0x15Shoreline
 40 15 00 00 FF 0 1
 # 0x16Trail
@@ -115,7 +133,8 @@
 #0x26Intermittent River 
 40 26 00 00 FF 1 1
 # bicycle=no
-40 28 D0 D0 D0 0 1
+# helius: it's highway=path
+40 28 BF 7F 7F 0 1
 # Power line
 40 29 80 80 80 1 1
 # Track (selected part)
