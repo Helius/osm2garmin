@@ -3,7 +3,7 @@
 HL="[33m"
 CL="[0m"
 
-REGION_OSM="nsk.map" #name of map
+REGION_OSM="nsk.osm" #name of map
 RECT="81.8,54.1,84.5,55.5"  # rect for main map region obtained from big map
 SRTM_RECT_URL="http://www.openstreetmap.org/?lat=54.758&lon=83.102&zoom=9&layers=M"
 
