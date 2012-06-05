@@ -75,7 +75,7 @@ highway=primary_link [0x0C road_class=1 road_speed=2 resolution 18]
 highway=secondary [0x0D road_class=2 road_speed=3 resolution 18]
 highway=tertiary [0x0E road_class=2 road_speed=4 resolution 20]
 highway=unclassified | highway=minor [0x0F road_class=3 road_speed=5 resolution 22]
-#highway=residential | highway=living_street | highway=service [0x10 resolution 23]
+highway=residential | highway=living_street | highway=service [0x10 resolution 24]
 
 # Unroutable paths
 highway=track & difficult=yes [0x26 resolution 22]
@@ -95,9 +95,9 @@ highway=* & area!=yes [0x17 ]
 # ------------------------------------------------------------------------------------
 # Contours take their name from the elevation setting.
 
-contour=elevation & contour_ext=elevation_major { name '${ele}m'; } [0x23 resolution 20]
-contour=elevation & contour_ext=elevation_medium { name '${ele}m'; } [0x22 resolution 20]
-contour=elevation & contour_ext=elevation_minor { name '${ele}m'; } [0x21 resolution 20]
+contour=elevation & contour_ext=elevation_major { name '${ele}m'; } [0x22 resolution 20]
+contour=elevation & contour_ext=elevation_medium { name '${ele}m'; } [0x21 resolution 20]
+contour=elevation & contour_ext=elevation_minor { name '${ele}m'; } [0x20 resolution 20]
 
 
 # ------------------------------------------------------------------------------------
