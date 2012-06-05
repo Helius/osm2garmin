@@ -80,8 +80,8 @@ highway=residential | highway=living_street | highway=service [0x10 resolution 2
 # Unroutable paths
 highway=track & difficult=yes [0x26 resolution 22]
 highway=bridleway & difficult=yes [0x27 resolution 22]
-highway=footway | highway=path | highway=steps [0x28 resolution 22]
-highway=pedestrian & area!=yes [0x28 resolution 22]
+highway=footway | highway=path | highway=steps [0x16 resolution 22]
+highway=pedestrian & area!=yes [0x16 resolution 22]
 
 # Routable paths
 highway=track | highway=byway | highway=unsurfaced [0x11 road_class=4 road_speed=4 resolution 20]
@@ -95,9 +95,9 @@ highway=* & area!=yes [0x17 ]
 # ------------------------------------------------------------------------------------
 # Contours take their name from the elevation setting.
 
-contour=elevation & contour_ext=elevation_major { name '${ele}m'; } [0x22 resolution 20]
+contour=elevation & contour_ext=elevation_major { name '${ele}m'; } [0x20 resolution 18]
 contour=elevation & contour_ext=elevation_medium { name '${ele}m'; } [0x21 resolution 20]
-contour=elevation & contour_ext=elevation_minor { name '${ele}m'; } [0x20 resolution 20]
+contour=elevation & contour_ext=elevation_minor { name '${ele}m'; } [0x22 resolution 20]
 
 
 # ------------------------------------------------------------------------------------
@@ -115,11 +115,6 @@ route=ferry [0x1a road_class=0 resolution 18]
 waterway=stream [0x1e resolution 22]
 waterway=canal [0x1f resolution 20]
 waterway=drain [0x1f resolution 22]
-waterway=river [0x1f resolution 18]
+waterway=river [0x1f resolution 12]
 
-# Natural objects
-natural=coastline [0x15 resolution 12]
-natural=wood [0x50 resolution 12]
-natural=beach [0x54 resolution 14]
-natural=scrub | natural=fell | natural=heath | natural=grassland [0x4f resolution 16]
 
