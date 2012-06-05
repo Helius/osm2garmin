@@ -69,13 +69,13 @@ national_byway=yes				    		[0x05 road_class=4 road_speed=7 resolution 16]
 highway=motorway [0x1C road_class=0 road_speed=1 resolution 16]
 highway=motorway_link [0x1C road_class=0 road_speed=1 resolution 16]
 highway=trunk  [0x0B road_class=0 road_speed=1 resolution 16]
-highway=trunk_link [0x0B road_class=0 road_speed=1 resolution 16]
+highway=trunk_link [0x0B road_class=0 road_speed=1 resolution 18]
 highway=primary [0x0C road_class=1 road_speed=2 resolution 18]
 highway=primary_link [0x0C road_class=1 road_speed=2 resolution 18]
-highway=secondary [0x0D road_class=2 road_speed=3 resolution 16]
-highway=tertiary [0x0E road_class=2 road_speed=4 resolution 16]
-highway=unclassified | highway=minor [0x0F road_class=3 road_speed=5 resolution 16]
-highway=residential | highway=living_street | highway=service [0x10 road_class=3 road_speed=5 resolution 24]
+highway=secondary [0x0D road_class=2 road_speed=3 resolution 18]
+highway=tertiary [0x0E road_class=2 road_speed=4 resolution 20]
+highway=unclassified | highway=minor [0x0F road_class=3 road_speed=5 resolution 22]
+#highway=residential | highway=living_street | highway=service [0x10 resolution 23]
 
 # Unroutable paths
 highway=track & difficult=yes [0x26 resolution 22]
@@ -95,9 +95,9 @@ highway=* & area!=yes [0x17 ]
 # ------------------------------------------------------------------------------------
 # Contours take their name from the elevation setting.
 
-contour=elevation & contour_ext=elevation_major { name '${ele}m'; } [0x21 resolution 16]
+contour=elevation & contour_ext=elevation_major { name '${ele}m'; } [0x23 resolution 20]
 contour=elevation & contour_ext=elevation_medium { name '${ele}m'; } [0x22 resolution 20]
-contour=elevation & contour_ext=elevation_minor { name '${ele}m'; } [0x23 resolution 22]
+contour=elevation & contour_ext=elevation_minor { name '${ele}m'; } [0x21 resolution 20]
 
 
 # ------------------------------------------------------------------------------------
@@ -106,8 +106,8 @@ contour=elevation & contour_ext=elevation_minor { name '${ele}m'; } [0x23 resolu
 power=line | powerline=yes | power_line=yes | powerline=true		[0x29 resolution 22 continue]
 power=minor_line				[0x29 resolution 24 continue]
 
-railway=light_rail [0x14 resolution 18]
-railway=rail [0x14 resolution 18]
+railway=light_rail [0x14 resolution 20]
+railway=rail [0x14 resolution 20]
 railway=subway [0x14 resolution 20]
 railway=tram [0x14 resolution 20]
 
@@ -119,7 +119,7 @@ waterway=river [0x1f resolution 18]
 
 # Natural objects
 natural=coastline [0x15 resolution 12]
-natural=wood [0x50 resolution 6]
-natural=beach [0x54 resolution 10]
-natural=scrub | natural=fell | natural=heath | natural=grassland [0x4f resolution 6]
+natural=wood [0x50 resolution 12]
+natural=beach [0x54 resolution 14]
+natural=scrub | natural=fell | natural=heath | natural=grassland [0x4f resolution 16]
 
