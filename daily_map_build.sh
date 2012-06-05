@@ -22,7 +22,7 @@ prepare_srtm () {
 		echo $HL"srtm.osm exist:         ok"$CL
 	else
 		echo $HL"make srt.osm file..."$CL
-		mono Srtm2Osm/Srtm2Osm.exe -bounds3 SRTM_RECT_URL -cat 250 50 -step 10 -o no.srtm.osm
+		mono Srtm2Osm/Srtm2Osm.exe -bounds3 $SRTM_RECT_URL -cat 250 50 -step 10 -o no.srtm.osm
 	fi
 }
 
