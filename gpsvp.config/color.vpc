@@ -1,10 +1,10 @@
 00 FF FF FF# Background
 01 00 00 00# Text color
 02 00 00 00# Cursor color
-03 01 8 0 # Polyline
-03 02 8 1 # POI
-03 03 8 1 # Waypoint
-03 04 8 0 # Road name
+03 01 10 0 # Polyline
+03 02 10 1 # POI
+03 03 10 1 # Waypoint
+03 04 10 0 # Road name
 03 05 0E 1 # Screen button
 
 
