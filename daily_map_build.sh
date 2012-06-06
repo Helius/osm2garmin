@@ -9,8 +9,8 @@ SRTM_RECT_URL="http://www.openstreetmap.org/?lat=54.758&lon=83.102&zoom=9&layers
 
 
 #internal vars
-SRTMIMG_NAME="74010000"
 MAPIMG_MANE="74000000"
+SRTMIMG_NAME="74010000"
 
 
 usage() {
@@ -18,8 +18,8 @@ usage() {
 }
 
 prepare_srtm () {
-	if [ -f no.srtm.osm ]; then
-		echo $HL"srtm.osm exist:         ok"$CL
+	if [ -f "no.srtm.osm" ]; then
+		echo $HL"no.srtm.osm exist:         ok"$CL
 	else
 		echo $HL"make srt.osm file..."$CL
 		mono Srtm2Osm/Srtm2Osm.exe -bounds3 $SRTM_RECT_URL -cat 250 50 -step 10 -o no.srtm.osm
@@ -39,9 +39,12 @@ echo $HL"get nsk map region from big map..."$CL
 }
 
 build_srtm () {
-	if [ -f $SRTMIMG_NAME.img ]; then
-	# make garmin *.img from OSM contour map
-	java -Xmx2000M -jar mkgmap/mkgmap.jar --mapname=$SRTMIMG_NAME --style-file=cyclemap --transparent no.srtm.osm
+	if [ ! -f "$SRTMIMG_NAME.img" ]; then
+		# make garmin *.img from OSM contour map
+		echo $HL"build contour image..."$CL
+		java -Xmx2000M -jar mkgmap/mkgmap.jar --mapname=$SRTMIMG_NAME --style-file=cyclemap --transparent no.srtm.osm
+	else
+		echo $HL"contour map $SRTMIMG_NAME.img exist:     ok"$CL
 	fi
 }
 
@@ -61,9 +64,10 @@ cp gmapsupp.img /data/dropbox/gps/maps/$SUF.img
 case "$1" in
 "update_map" )
 echo "======== update_map =========="
+rm gmapsupp.img # first remove old map
 prepare_srtm
-prepare_map
 build_srtm
+prepare_map
 build_map
 make_img
 ;;
